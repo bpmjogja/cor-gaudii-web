@@ -21,6 +21,7 @@ export default function Header() {
     { href: "/#about", label: "About" },
     { href: "/#support", label: "Support" },
     { href: "/news", label: "News" },
+    { href: "/events", label: "Events" },
     { href: "/#contact", label: "Contact" },
   ];
 

@@ -3,50 +3,50 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-const newsItems = [
+const eventItems = [
   {
     image: "https://placehold.co/600x400.png",
-    date: "October 28, 2024",
-    title: "Volunteer Drive Success",
-    description: "A huge thank you to everyone who signed up during our fall volunteer drive. Your support is invaluable.",
-    link: "/news",
-    hint: "volunteers group"
+    date: "November 15, 2024",
+    title: "Annual Community Gala",
+    description: "Join us for our biggest night of the year as we celebrate our achievements and look to the future.",
+    link: "/events",
+    hint: "gala event"
   },
   {
     image: "https://placehold.co/600x400.png",
-    date: "September 5, 2024",
-    title: "New Partnership Announced",
-    description: "We're excited to partner with Local Corp to expand our reach and impact in the community.",
-    link: "/news",
-    hint: "business handshake"
+    date: "December 5, 2024",
+    title: "Winter Holiday Market",
+    description: "Get in the festive spirit at our annual holiday market. Support local artisans and find unique gifts.",
+    link: "/events",
+    hint: "holiday market"
   },
   {
     image: "https://placehold.co/600x400.png",
-    date: "August 12, 2024",
-    title: "Summer Youth Program Wraps Up",
-    description: "Our summer youth program concluded with a showcase of the amazing projects created by the participants.",
-    link: "/news",
-    hint: "children learning"
+    date: "January 25, 2025",
+    title: "New Year Goal Setting Workshop",
+    description: "Start the new year right with our popular workshop on setting and achieving personal and community goals.",
+    link: "/events",
+    hint: "workshop presentation"
   },
 ];
 
-export default function NewsSection() {
+export default function EventsSection() {
   return (
-    <section id="news" className="bg-card">
+    <section id="events">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground">
-            Stay Updated
+            Be a Part of It
           </div>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-primary font-headline sm:text-4xl">
-            Latest News
+            Upcoming Events
           </h2>
           <p className="mt-4 text-lg text-foreground/80">
-            Keep up with our latest activities and announcements.
+            Join us at our upcoming events and connect with the community.
           </p>
         </div>
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {newsItems.map((item) => (
+          {eventItems.map((item) => (
             <Card key={item.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
               <Link href={item.link} className="block">
                 <CardHeader className="p-0">
@@ -65,16 +65,16 @@ export default function NewsSection() {
                   <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="link" className="p-0 text-primary hover:text-accent">Read More →</Button>
+                  <Button variant="link" className="p-0 text-primary hover:text-accent">Learn More →</Button>
                 </CardFooter>
               </Link>
             </Card>
           ))}
         </div>
         <div className="mt-12 text-center">
-            <Link href="/news">
+            <Link href="/events">
                 <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>
-                    View All News
+                    View All Events
                 </Button>
             </Link>
         </div>
