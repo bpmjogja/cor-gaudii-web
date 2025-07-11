@@ -1,14 +1,19 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import { format, isSameDay } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 
 const allEvents = [
     {
       image: "https://placehold.co/600x400.png",
-      date: "November 15, 2024",
+      date: new Date("2024-11-15T12:00:00Z"),
       title: "Annual Community Gala",
       description: "Join us for our biggest night of the year as we celebrate our achievements and look to the future. It was a wonderful event with over 200 attendees and we raised a significant amount for our projects.",
       link: "#",
@@ -16,7 +21,7 @@ const allEvents = [
     },
     {
       image: "https://placehold.co/600x400.png",
-      date: "December 5, 2024",
+      date: new Date("2024-12-05T12:00:00Z"),
       title: "Winter Holiday Market",
       description: "Get in the festive spirit at our annual holiday market. Support local artisans and find unique gifts for your loved ones.",
       link: "#",
@@ -24,7 +29,7 @@ const allEvents = [
     },
     {
       image: "https://placehold.co/600x400.png",
-      date: "January 25, 2025",
+      date: new Date("2025-01-25T12:00:00Z"),
       title: "New Year Goal Setting Workshop",
       description: "Start the new year right with our popular workshop on setting and achieving personal and community goals.",
       link: "#",
@@ -33,6 +38,14 @@ const allEvents = [
   ];
 
 export default function EventsPage() {
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+    
+    const eventDays = allEvents.map(event => event.date);
+
+    const selectedEvents = selectedDate 
+        ? allEvents.filter(event => isSameDay(event.date, selectedDate))
+        : [];
+
     return (
         <div className="flex flex-col min-h-screen bg-background">
             <Header />
@@ -41,37 +54,65 @@ export default function EventsPage() {
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="max-w-3xl mx-auto text-center">
                             <h1 className="text-3xl font-bold tracking-tight text-primary font-headline sm:text-4xl">
-                                Upcoming Events
+                                Events Calendar
                             </h1>
                             <p className="mt-4 text-lg text-foreground/80">
-                                Join us at our upcoming events and be a part of our community.
+                                Explore our upcoming events. Select a date on the calendar to see what's happening.
                             </p>
                         </div>
-                        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        {allEvents.map((item) => (
-                            <Card key={item.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <Link href={item.link} className="block">
-                                <CardHeader className="p-0">
-                                <Image
-                                    src={item.image}
-                                    alt={item.title}
-                                    width={600}
-                                    height={400}
-                                    className="w-full h-48 object-cover"
-                                    data-ai-hint={item.hint}
+                        <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-16">
+                            <div className="flex justify-center">
+                                <Calendar
+                                    mode="single"
+                                    selected={selectedDate}
+                                    onSelect={setSelectedDate}
+                                    className="rounded-md border"
+                                    modifiers={{
+                                        events: eventDays
+                                    }}
+                                    modifiersStyles={{
+                                        events: {
+                                            color: 'hsl(var(--primary-foreground))',
+                                            backgroundColor: 'hsl(var(--primary))',
+                                        }
+                                    }}
                                 />
-                                </CardHeader>
-                                <CardContent className="p-6">
-                                <p className="text-sm text-muted-foreground">{item.date}</p>
-                                <CardTitle className="mt-2 font-headline text-xl">{item.title}</CardTitle>
-                                <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
-                                </CardContent>
-                                <CardFooter>
-                                <Button variant="link" className="p-0 text-primary hover:text-accent">Learn More →</Button>
-                                </CardFooter>
-                            </Link>
-                            </Card>
-                        ))}
+                            </div>
+                            <div className="space-y-6">
+                                <h2 className="text-2xl font-bold tracking-tight text-primary font-headline">
+                                    {selectedDate ? format(selectedDate, "MMMM d, yyyy") : 'Select a date'}
+                                </h2>
+                                {selectedEvents.length > 0 ? (
+                                    <div className="space-y-8">
+                                        {selectedEvents.map((event) => (
+                                            <Card key={event.title} className="overflow-hidden shadow-lg">
+                                                <Link href={event.link} className="block">
+                                                    <CardHeader className="p-0">
+                                                        <Image
+                                                            src={event.image}
+                                                            alt={event.title}
+                                                            width={600}
+                                                            height={400}
+                                                            className="w-full h-48 object-cover"
+                                                            data-ai-hint={event.hint}
+                                                        />
+                                                    </CardHeader>
+                                                    <CardContent className="p-6">
+                                                        <CardTitle className="mt-2 font-headline text-xl">{event.title}</CardTitle>
+                                                        <p className="mt-2 text-sm text-muted-foreground">{event.description}</p>
+                                                    </CardContent>
+                                                </Link>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <Card>
+                                        <CardContent className="p-6">
+                                            <p className="text-muted-foreground">No events scheduled for this day.</p>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </section>
