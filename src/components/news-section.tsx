@@ -9,7 +9,7 @@ const newsItems = [
     date: "November 15, 2024",
     title: "Annual Community Gala",
     description: "Join us for our biggest night of the year as we celebrate our achievements and look to the future.",
-    link: "#",
+    link: "/news",
     hint: "gala event"
   },
   {
@@ -17,7 +17,7 @@ const newsItems = [
     date: "October 28, 2024",
     title: "Volunteer Drive Success",
     description: "A huge thank you to everyone who signed up during our fall volunteer drive. Your support is invaluable.",
-    link: "#",
+    link: "/news",
     hint: "volunteers group"
   },
   {
@@ -25,7 +25,7 @@ const newsItems = [
     date: "September 5, 2024",
     title: "New Partnership Announced",
     description: "We're excited to partner with Local Corp to expand our reach and impact in the community.",
-    link: "#",
+    link: "/news",
     hint: "business handshake"
   },
 ];
@@ -70,6 +70,13 @@ export default function NewsSection() {
               </Link>
             </Card>
           ))}
+        </div>
+        <div className="mt-12 text-center">
+            <Link href="/news">
+                <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>
+                    View All News
+                </Button>
+            </Link>
         </div>
       </div>
     </section>
