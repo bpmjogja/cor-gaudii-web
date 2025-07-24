@@ -155,8 +155,9 @@ export default function EditCoursePage() {
         e.preventDefault();
         setDraggedOverModule(null);
         if (!draggedItem || !course) {
-             if (!draggedItem && e.currentTarget.id === `dropzone-${targetModuleIndex}`) {
-                handleFileUploadDrop(e, targetModuleIndex);
+             if (!draggedItem && e.currentTarget.id.startsWith('dropzone-')) {
+                const moduleIndex = parseInt(e.currentTarget.id.split('-')[1]);
+                handleFileUploadDrop(e, moduleIndex);
              }
              return;
         }
@@ -249,10 +250,10 @@ export default function EditCoursePage() {
                                 className="border-b-0"
                             >
                                 <div className="flex items-center pr-4 hover:bg-muted/50 rounded-t-md">
-                                     <div className="p-2 cursor-grab">
+                                     <div className="p-4 cursor-grab">
                                         <GripVertical className="h-5 w-5 text-muted-foreground" />
                                     </div>
-                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-0 py-2 ">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-0 py-4 ">
                                         <div className="flex items-center flex-1">
                                             <span>{module.title}</span>
                                         </div>
@@ -261,14 +262,19 @@ export default function EditCoursePage() {
                                         <Button variant="ghost" size="icon" onClick={() => alert('Edit clicked')}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
-                                        <Button variant="destructive" size="icon" onClick={() => alert('Trash clicked')}>
+                                        <Button 
+                                            variant="outline"
+                                            size="icon" 
+                                            onClick={() => alert('Trash clicked')}
+                                            className="hover:bg-destructive hover:text-destructive-foreground"
+                                        >
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
                                 </div>
                                 <AccordionContent>
                                     <div
-                                        className="p-4 m-4 mt-0"
+                                        className="pt-0 p-4"
                                         onDrop={(e) => handleDrop(e, index)}
                                         onDragOver={(e) => handleDragOver(e, index)}
                                     >
@@ -297,7 +303,12 @@ export default function EditCoursePage() {
                                                                 <Edit className="h-4 w-4 mr-2" />
                                                                 Edit
                                                             </Button>
-                                                             <Button variant="destructive" size="sm">
+                                                             <Button 
+                                                                variant="outline"
+                                                                size="sm"
+                                                                className="hover:bg-destructive hover:text-destructive-foreground"
+                                                                onClick={() => {/* Implement delete logic */}}
+                                                             >
                                                                 <Trash2 className="h-4 w-4 mr-2" />
                                                                 Delete
                                                             </Button>
@@ -305,31 +316,35 @@ export default function EditCoursePage() {
                                                     </li>
                                                 )
                                             })}
-                                            <li
-                                                id={`dropzone-${index}`}
-                                                className={cn(
-                                                    "mt-4 border-2 border-dashed border-muted-foreground/20 rounded-lg transition-colors duration-200",
-                                                    draggedOverModule === index && draggedItem === null && "border-primary bg-primary/10"
-                                                )}
-                                                onDragOver={(e) => handleDragOver(e, index)}
-                                                onDragEnter={(e) => { e.preventDefault(); if(draggedItem === null) setDraggedOverModule(index); }}
-                                                onDragLeave={(e) => { e.preventDefault(); if(draggedItem === null) setDraggedOverModule(null); }}
-                                                onDrop={(e) => handleDrop(e, index)}
-                                            >
-                                                <div className="p-4 w-full">
-                                                    <Button variant="outline" size="sm" className="w-full pointer-events-none">
-                                                        <PlusCircle className="h-4 w-4 mr-2" />
-                                                        Add Material
-                                                    </Button>
-                                                    {draggedOverModule === index && draggedItem === null && (
-                                                        <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
-                                                            <Upload className="h-8 w-8 mb-2" />
-                                                            <p className="font-semibold">Drop files to upload</p>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </li>
                                         </ul>
+                                    </div>
+                                    <div
+                                        id={`dropzone-${index}`}
+                                        className={cn(
+                                            "mx-4 mb-4 border-2 border-dashed border-muted-foreground/20 rounded-lg transition-colors duration-200",
+                                            draggedOverModule === index && draggedItem === null && "border-primary bg-primary/10"
+                                        )}
+                                        onDragOver={(e) => handleDragOver(e, index)}
+                                        onDragEnter={(e) => { e.preventDefault(); if(draggedItem === null) setDraggedOverModule(index); }}
+                                        onDragLeave={(e) => { e.preventDefault(); if(draggedItem === null) setDraggedOverModule(null); }}
+                                        onDrop={(e) => handleDrop(e, index)}
+                                    >
+                                        <div className="p-4 w-full">
+                                            <div className="w-full pointer-events-none text-center">
+                                                <Button variant="outline" size="sm" className="w-full pointer-events-none">
+                                                    <PlusCircle className="h-4 w-4 mr-2" />
+                                                    Add Material
+                                                </Button>
+                                                {draggedOverModule === index && draggedItem === null ? (
+                                                    <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
+                                                        <Upload className="h-8 w-8 mb-2" />
+                                                        <p className="font-semibold">Drop files to upload</p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs text-muted-foreground mt-2">or drop files here</p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </AccordionContent>
                             </AccordionItem>
