@@ -18,7 +18,7 @@ const prayerRequests = [
         name: "David Brown",
         request: "Please pray for guidance and wisdom in making a major career decision.",
         date: "2024-07-28",
-        status: "Prayed For",
+        status: "Done",
     },
      {
         id: "prayer-3",
@@ -58,7 +58,7 @@ export default function AdminPrayersPage() {
                                     <TableCell className="text-sm text-muted-foreground">{prayer.request}</TableCell>
                                     <TableCell>{prayer.date}</TableCell>
                                     <TableCell>
-                                        <Badge variant={prayer.status === 'Prayed For' ? 'secondary' : 'default'}>
+                                        <Badge variant={prayer.status === 'Done' ? 'secondary' : 'default'}>
                                             {prayer.status}
                                         </Badge>
                                     </TableCell>
