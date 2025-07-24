@@ -4,6 +4,7 @@ import AboutSection from '@/components/about-section';
 import Footer from '@/components/footer';
 import QuickLinksSection from '@/components/quick-links-section';
 import WhatWeDoSection from '@/components/what-we-do-section';
+import OurGoalsSection from '@/components/our-goals-section';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
         <HeroSection />
         <AboutSection />
         <WhatWeDoSection />
+        <OurGoalsSection />
         <QuickLinksSection />
       </main>
       <Footer />
