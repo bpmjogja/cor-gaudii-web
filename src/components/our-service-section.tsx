@@ -18,10 +18,10 @@ const consultationFormSchema = z.object({
     address: z.string().min(10, "Address must be at least 10 characters."),
     whatsappNumber: z.string().min(10, "Please enter a valid WhatsApp number."),
     age: z.coerce.number().min(1, "Please enter a valid age."),
-    gender: z.enum(["male", "female", "other"], {
+    gender: z.enum(["male", "female"], {
         required_error: "You need to select a gender.",
     }),
-    trouble: z.string().min(10, "Please describe your trouble in at least 10 characters."),
+    problem: z.string().min(10, "Please describe your problem in at least 10 characters."),
 });
 
 export default function OurServiceSection() {
@@ -34,7 +34,7 @@ export default function OurServiceSection() {
             address: "",
             whatsappNumber: "",
             age: undefined,
-            trouble: "",
+            problem: "",
         },
     });
 
@@ -156,10 +156,6 @@ export default function OurServiceSection() {
                                                                     <FormControl><RadioGroupItem value="female" /></FormControl>
                                                                     <FormLabel className="font-normal">Female</FormLabel>
                                                                 </FormItem>
-                                                                <FormItem className="flex items-center space-x-2">
-                                                                    <FormControl><RadioGroupItem value="other" /></FormControl>
-                                                                    <FormLabel className="font-normal">Other</FormLabel>
-                                                                </FormItem>
                                                             </RadioGroup>
                                                         </FormControl>
                                                         <FormMessage />
@@ -168,10 +164,10 @@ export default function OurServiceSection() {
                                             />
                                             <FormField
                                                 control={form.control}
-                                                name="trouble"
+                                                name="problem"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Describe your trouble</FormLabel>
+                                                        <FormLabel>Describe your problem</FormLabel>
                                                         <FormControl>
                                                             <Textarea placeholder="Please describe the issue you are facing..." className="min-h-[100px]" {...field} />
                                                         </FormControl>
