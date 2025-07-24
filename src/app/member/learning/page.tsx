@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
-const learningMaterials = [
+const enrolledCourses = [
     {
         title: "Introduction to Community Building",
         description: "Learn the fundamentals of building and nurturing a thriving community.",
@@ -35,31 +35,34 @@ const learningMaterials = [
 export default function LearningPage() {
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2">
                 <h1 className="text-lg font-semibold md:text-2xl flex items-center gap-2">
                     <BookOpen className="h-6 w-6" />
-                    Learning Materials
+                    My Courses
                 </h1>
+                <p className="text-muted-foreground">
+                    Here are the courses you are currently enrolled in.
+                </p>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {learningMaterials.map((material) => (
-                    <Card key={material.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-4">
+                {enrolledCourses.map((course) => (
+                    <Card key={course.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                         <CardHeader className="p-0">
                             <Image
-                                src={material.image}
-                                alt={material.title}
+                                src={course.image}
+                                alt={course.title}
                                 width={600}
                                 height={400}
                                 className="w-full h-48 object-cover"
-                                data-ai-hint={material.hint}
+                                data-ai-hint={course.hint}
                             />
                         </CardHeader>
                         <CardContent className="p-6">
-                            <CardTitle className="font-headline text-xl">{material.title}</CardTitle>
-                            <p className="mt-2 text-sm text-muted-foreground">{material.description}</p>
+                            <CardTitle className="font-headline text-xl">{course.title}</CardTitle>
+                            <p className="mt-2 text-sm text-muted-foreground">{course.description}</p>
                         </CardContent>
                         <CardFooter>
-                           <Button>Start Learning</Button>
+                           <Button>Continue Learning</Button>
                         </CardFooter>
                     </Card>
                 ))}
