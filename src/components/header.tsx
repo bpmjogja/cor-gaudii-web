@@ -47,7 +47,6 @@ export default function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-4 md:flex">
-          <Button style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>Donate</Button>
         </div>
         <Sheet>
           <SheetTrigger asChild>
@@ -75,7 +74,6 @@ export default function Header() {
                   </SheetClose>
                 ))}
               </nav>
-              <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>Donate</Button>
             </div>
           </SheetContent>
         </Sheet>
