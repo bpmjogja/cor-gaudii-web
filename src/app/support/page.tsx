@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Handshake, Heart, CalendarClock } from "lucide-react";
+import { Handshake, Heart } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,13 +12,6 @@ const supportOptions = [
     description: "Your single gift can provide immediate resources for our ongoing projects and community needs.",
     buttonText: "Donate Now",
     value: "one-time-donation",
-  },
-  {
-    icon: CalendarClock,
-    title: "Monthly Pledge",
-    description: "Become a sustaining partner. Your monthly support ensures long-term stability and impact.",
-    buttonText: "Pledge Monthly",
-    value: "monthly-pledge",
   },
   {
     icon: Handshake,
@@ -46,7 +39,7 @@ export default function SupportPage() {
                         </div>
                         <div className="mt-12 max-w-2xl mx-auto">
                            <Tabs defaultValue={supportOptions[0].value} className="w-full">
-                                <TabsList className="grid w-full grid-cols-3">
+                                <TabsList className="grid w-full grid-cols-2">
                                     {supportOptions.map((option) => (
                                         <TabsTrigger key={option.value} value={option.value}>{option.title}</TabsTrigger>
                                     ))}
