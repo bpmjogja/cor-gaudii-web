@@ -2,12 +2,13 @@
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Mountain, Newspaper, Users, Calendar, LogOut, Home } from "lucide-react";
+import { Menu, Mountain, Newspaper, Users, Calendar, LogOut, Home, BookOpen } from "lucide-react";
 import { User } from "lucide-react";
 
 const adminNavLinks = [
     { href: "/admin", label: "Dashboard", icon: Mountain },
     { href: "/admin/articles", label: "Articles", icon: Newspaper },
+    { href: "/admin/courses", label: "Courses", icon: BookOpen },
     { href: "/admin/members", label: "Members", icon: Users },
     { href: "/admin/events", label: "Events", icon: Calendar },
 ]
