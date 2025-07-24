@@ -1,12 +1,14 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2 } from "lucide-react";
+import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2, Upload } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cn } from '@/lib/utils';
 
 const courseData = {
     "intro-to-community-building": {
@@ -60,10 +62,34 @@ function getCourseData(courseId: string) {
 
 export default function EditCoursePage({ params }: { params: { courseId: string } }) {
     const course = getCourseData(params.courseId);
+    const [draggedOverModule, setDraggedOverModule] = useState<number | null>(null);
 
     if (!course) {
         notFound();
     }
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        e.preventDefault();
+        setDraggedOverModule(index);
+    };
+
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setDraggedOverModule(null);
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        e.preventDefault();
+        setDraggedOverModule(null);
+        const files = Array.from(e.dataTransfer.files);
+        console.log(`Files dropped in module ${index + 1}:`, files.map(f => f.name));
+        // Here you would typically handle the file upload
+        alert(`${files.length} file(s) dropped in ${course.modules[index].title}. Check the console for details.`);
+    };
     
     return (
         <div className="flex flex-col gap-6">
@@ -96,7 +122,7 @@ export default function EditCoursePage({ params }: { params: { courseId: string 
                         </Button>
                     </CardTitle>
                     <CardDescription>
-                       Manage modules and learning materials for this course.
+                       Manage modules and learning materials for this course. Drag and drop files to upload.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -117,35 +143,52 @@ export default function EditCoursePage({ params }: { params: { courseId: string 
                                     </div>
                                 </div>
                                 <AccordionContent>
-                                    <ul className="space-y-4 pt-4">
-                                        {module.materials.map((material: Material, matIndex: number) => {
-                                            const Icon = materialIcons[material.type];
-                                            return (
-                                                <li key={matIndex} className="flex items-center justify-between p-4 rounded-md bg-muted/50">
-                                                    <div className="flex items-center gap-4">
-                                                        <Icon className="h-5 w-5 text-primary" />
-                                                        <span className="font-medium">{material.title}</span>
-                                                    </div>
-                                                     <div className="flex items-center gap-2">
-                                                        <Button variant="outline" size="sm">
-                                                            <Edit className="h-4 w-4 mr-2" />
-                                                            Edit
-                                                        </Button>
-                                                         <Button variant="outline" size="sm" color="destructive">
-                                                            <Trash2 className="h-4 w-4 mr-2" />
-                                                            Delete
-                                                        </Button>
-                                                    </div>
-                                                </li>
-                                            )
-                                        })}
-                                        <li className="flex justify-center mt-4">
-                                            <Button variant="outline" size="sm">
-                                                <PlusCircle className="h-4 w-4 mr-2" />
-                                                Add Material
-                                            </Button>
-                                        </li>
-                                    </ul>
+                                    <div
+                                        onDragOver={handleDragOver}
+                                        onDragEnter={(e) => handleDragEnter(e, index)}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={(e) => handleDrop(e, index)}
+                                        className={cn(
+                                            "border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 transition-colors duration-200",
+                                            draggedOverModule === index && "border-primary bg-primary/10"
+                                        )}
+                                    >
+                                        <ul className="space-y-4">
+                                            {module.materials.map((material: Material, matIndex: number) => {
+                                                const Icon = materialIcons[material.type];
+                                                return (
+                                                    <li key={matIndex} className="flex items-center justify-between p-4 rounded-md bg-muted/50">
+                                                        <div className="flex items-center gap-4">
+                                                            <Icon className="h-5 w-5 text-primary" />
+                                                            <span className="font-medium">{material.title}</span>
+                                                        </div>
+                                                         <div className="flex items-center gap-2">
+                                                            <Button variant="outline" size="sm">
+                                                                <Edit className="h-4 w-4 mr-2" />
+                                                                Edit
+                                                            </Button>
+                                                             <Button variant="outline" size="sm" color="destructive">
+                                                                <Trash2 className="h-4 w-4 mr-2" />
+                                                                Delete
+                                                            </Button>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })}
+                                            <li className="flex justify-center mt-4">
+                                                <Button variant="outline" size="sm">
+                                                    <PlusCircle className="h-4 w-4 mr-2" />
+                                                    Add Material
+                                                </Button>
+                                            </li>
+                                        </ul>
+                                         {draggedOverModule === index && (
+                                            <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
+                                                <Upload className="h-8 w-8 mb-2" />
+                                                <p className="font-semibold">Drop files to upload</p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>
                         ))}
