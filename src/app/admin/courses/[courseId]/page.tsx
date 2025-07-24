@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2, Upload } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { cn } from '@/lib/utils';
 
 const courseData = {
@@ -60,8 +60,10 @@ function getCourseData(courseId: string) {
     return courseData[courseId];
 }
 
-export default function EditCoursePage({ params }: { params: { courseId: string } }) {
-    const course = getCourseData(params.courseId);
+export default function EditCoursePage() {
+    const params = useParams();
+    const courseId = Array.isArray(params.courseId) ? params.courseId[0] : params.courseId;
+    const course = getCourseData(courseId);
     const [draggedOverModule, setDraggedOverModule] = useState<number | null>(null);
 
     if (!course) {
