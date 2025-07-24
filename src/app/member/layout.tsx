@@ -6,6 +6,7 @@ import { Menu, Mountain, BookOpen, FileQuestion, MessageSquare, LayoutDashboard,
 
 const memberNavLinks = [
     { href: "/member", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/member/profile", label: "Profile", icon: User },
     { href: "/member/learning", label: "Learning", icon: BookOpen },
     { href: "/member/quizzes", label: "Quizzes", icon: FileQuestion },
     { href: "/member/consultation", label: "Consultation", icon: MessageSquare },
