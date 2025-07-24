@@ -9,9 +9,20 @@ import { ArrowRight, Heart, Handshake, Calendar, FileText, Copy, Church } from "
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
 
 const bankAccountNumber = "123-456-7890";
+
+const prayerFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters."),
+  prayer: z.string().min(10, "Prayer request must be at least 10 characters."),
+});
 
 const quickLinks = [
   {
@@ -25,7 +36,7 @@ const quickLinks = [
     icon: Church,
     title: "Prayer Request",
     description: "Submit your prayer requests to our dedicated prayer team.",
-    link: "/prayer-request",
+    link: "#",
     hint: "prayer icon"
   },
   {
@@ -48,12 +59,29 @@ export default function QuickLinksSection() {
     const { toast } = useToast();
     const [copied, setCopied] = useState(false);
 
+    const prayerForm = useForm<z.infer<typeof prayerFormSchema>>({
+      resolver: zodResolver(prayerFormSchema),
+      defaultValues: {
+        name: "",
+        prayer: "",
+      },
+    });
+
     const handleCopy = () => {
         navigator.clipboard.writeText(bankAccountNumber);
         setCopied(true);
         toast({ title: "Copied!", description: "Bank account number copied to clipboard." });
         setTimeout(() => setCopied(false), 2000);
     };
+
+    function onPrayerSubmit(values: z.infer<typeof prayerFormSchema>) {
+      console.log(values);
+      toast({
+        title: "Prayer Request Sent!",
+        description: "Thank you for sharing. Our team will be praying for you.",
+      });
+      prayerForm.reset();
+    }
 
   return (
     <section id="quick-links" className="bg-secondary">
@@ -108,6 +136,55 @@ export default function QuickLinksSection() {
                                 </div>
                             </div>
                         </DialogContent>
+                    </Dialog>
+                ) : link.title === 'Prayer Request' ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="link" className="p-0 text-primary hover:text-accent">
+                          Submit Request <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-lg">
+                        <DialogHeader>
+                          <DialogTitle>Prayer Request</DialogTitle>
+                          <DialogDescription>
+                            Let us know how we can pray for you. Your requests are confidential.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <Form {...prayerForm}>
+                          <form onSubmit={prayerForm.handleSubmit(onPrayerSubmit)} className="space-y-6">
+                            <FormField
+                              control={prayerForm.control}
+                              name="name"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Your Name</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="John Doe" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={prayerForm.control}
+                              name="prayer"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Prayer Request</FormLabel>
+                                  <FormControl>
+                                    <Textarea placeholder="Please pray for..." className="min-h-[120px]" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button type="submit" size="lg" className="w-full" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>
+                              Submit Prayer Request
+                            </Button>
+                          </form>
+                        </Form>
+                      </DialogContent>
                     </Dialog>
                 ) : (
                     <Button asChild variant="link" className="p-0 text-primary hover:text-accent">
