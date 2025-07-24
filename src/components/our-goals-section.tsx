@@ -1,20 +1,23 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Target, TrendingUp, Leaf } from "lucide-react";
 
 const goals = [
     {
         icon: Target,
         title: "Strategic Impact",
+        value: "strategic-impact",
         description: "Focus on long-term, sustainable projects that address root causes of community challenges and create lasting positive change."
     },
     {
         icon: TrendingUp,
         title: "Expand Our Reach",
+        value: "expand-reach",
         description: "Grow our network of volunteers and partners to support more grassroots movements in new communities and regions."
     },
     {
         icon: Leaf,
         title: "Promote Sustainability",
+        value: "promote-sustainability",
         description: "Champion and implement eco-friendly practices across all our projects, ensuring a healthier planet for future generations."
     }
 ];
@@ -31,20 +34,24 @@ export default function OurGoalsSection() {
                         We are committed to achieving ambitious goals that drive our mission forward and create a better future for all.
                     </p>
                 </div>
-                <div className="mt-12 grid gap-8 md:grid-cols-3">
-                    {goals.map((goal) => (
-                        <Card key={goal.title} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <CardHeader className="items-center">
-                                <div className="rounded-full bg-primary/10 p-4">
-                                    <goal.icon className="h-8 w-8 text-primary" />
+                <div className="mt-12">
+                    <Tabs defaultValue={goals[0].value} className="w-full max-w-2xl mx-auto">
+                        <TabsList className="grid w-full grid-cols-3">
+                            {goals.map((goal) => (
+                                <TabsTrigger key={goal.value} value={goal.value} className="flex gap-2 items-center">
+                                    <goal.icon className="h-5 w-5" />
+                                    <span>{goal.title}</span>
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                        {goals.map((goal) => (
+                            <TabsContent key={goal.value} value={goal.value} className="mt-6">
+                                <div className="text-center p-6 bg-secondary/30 rounded-lg">
+                                    <p className="text-muted-foreground">{goal.description}</p>
                                 </div>
-                                <CardTitle className="font-headline text-xl mt-4">{goal.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-muted-foreground">{goal.description}</p>
-                            </CardContent>
-                        </Card>
-                    ))}
+                            </TabsContent>
+                        ))}
+                    </Tabs>
                 </div>
             </div>
         </section>
