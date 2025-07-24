@@ -65,7 +65,7 @@ export default function EventsSection() {
                   <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="link" className="p-0 text-primary hover:text-accent">Learn More →</Button>
+                  <Button variant="link" className="p-0 text-primary hover:text-accent">View Event →</Button>
                 </CardFooter>
               </Link>
             </Card>

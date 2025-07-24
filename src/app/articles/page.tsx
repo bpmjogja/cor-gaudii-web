@@ -83,7 +83,7 @@ export default function ArticlesPage() {
                                 <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
                                 </CardContent>
                                 <CardFooter>
-                                <Button variant="link" className="p-0 text-primary hover:text-accent">Read More →</Button>
+                                <Button variant="link" className="p-0 text-primary hover:text-accent">Read Article →</Button>
                                 </CardFooter>
                             </Link>
                             </Card>
