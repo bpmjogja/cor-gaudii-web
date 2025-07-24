@@ -15,10 +15,10 @@ const supportOptions = [
   },
   {
     icon: Handshake,
-    title: "Volunteer",
+    title: "Stipendium",
     description: "Give the gift of your time and skills. Join our team of dedicated volunteers making a difference.",
     buttonText: "Get Involved",
-    value: "volunteer",
+    value: "stipendium",
   },
 ];
 
