@@ -1,20 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 const ministries = [
   {
     name: "Leadership",
-    members: [
-      { role: "Founder & CEO", initials: "JD", image: "https://placehold.co/100x100.png", hint: "man portrait" },
-      { role: "Director of Operations", initials: "JS", image: "https://placehold.co/100x100.png", hint: "woman portrait" },
-    ],
+    image: "https://placehold.co/300x200.png",
+    hint: "team meeting"
   },
   {
     name: "Community Engagement",
-    members: [
-      { role: "Community Manager", initials: "SG", image: "https://placehold.co/100x100.png", hint: "person smiling" },
-      { role: "Lead Volunteer", initials: "EW", image: "https://placehold.co/100x100.png", hint: "woman smiling" },
-    ],
+    image: "https://placehold.co/300x200.png",
+    hint: "community event"
   },
 ];
 
@@ -41,24 +37,24 @@ export default function AboutSection() {
             <h3 className="text-2xl font-bold tracking-tight text-primary font-headline sm:text-3xl text-center md:text-left">
               Meet Our Team
             </h3>
-            {ministries.map((ministry) => (
-              <div key={ministry.name}>
-                <h4 className="mb-4 text-xl font-semibold tracking-tight text-accent font-headline sm:text-2xl text-center md:text-left">
-                  {ministry.name} Ministry
-                </h4>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-2">
-                  {ministry.members.map((member) => (
-                    <div key={member.role} className="flex flex-col items-center text-center">
-                      <Avatar className="h-24 w-24 mb-2 border-2 border-primary/20">
-                        <AvatarImage src={member.image} alt={member.role} data-ai-hint={member.hint} />
-                        <AvatarFallback>{member.initials}</AvatarFallback>
-                      </Avatar>
-                      <p className="text-sm text-muted-foreground">{member.role}</p>
-                    </div>
-                  ))}
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              {ministries.map((ministry) => (
+                <div key={ministry.name} className="flex flex-col items-center text-center">
+                  <div className="w-full h-48 relative overflow-hidden rounded-lg mb-4">
+                     <Image 
+                        src={ministry.image} 
+                        alt={ministry.name + " Ministry"} 
+                        layout="fill"
+                        objectFit="cover"
+                        data-ai-hint={ministry.hint} 
+                      />
+                  </div>
+                  <h4 className="text-xl font-semibold tracking-tight text-accent font-headline">
+                    {ministry.name} Ministry
+                  </h4>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
