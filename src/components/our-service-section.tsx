@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -179,7 +179,9 @@ export default function OurServiceSection() {
                                                     </FormItem>
                                                 )}
                                             />
-                                            <Button type="submit" size="lg" className="w-full">Submit Request</Button>
+                                            <DialogFooter>
+                                                <Button type="submit" size="lg" className="w-full">Submit Request</Button>
+                                            </DialogFooter>
                                         </form>
                                     </Form>
                                 </DialogContent>
