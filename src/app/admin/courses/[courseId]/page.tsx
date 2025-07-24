@@ -131,8 +131,10 @@ export default function EditCoursePage() {
     const handleDragOver = (e: React.DragEvent, moduleIndex: number, materialIndex?: number) => {
         e.preventDefault();
         if (!draggedItem) { // This is for file upload
-             setDraggedOverModule(moduleIndex);
-             e.dataTransfer.dropEffect = 'copy';
+             if (e.currentTarget.id === `dropzone-${moduleIndex}`) {
+                setDraggedOverModule(moduleIndex);
+                e.dataTransfer.dropEffect = 'copy';
+             }
              return;
         }
 
@@ -153,7 +155,7 @@ export default function EditCoursePage() {
         e.preventDefault();
         setDraggedOverModule(null);
         if (!draggedItem || !course) {
-             if (!draggedItem) {
+             if (!draggedItem && e.currentTarget.id === `dropzone-${targetModuleIndex}`) {
                 handleFileUploadDrop(e, targetModuleIndex);
              }
              return;
@@ -259,7 +261,7 @@ export default function EditCoursePage() {
                                         <Button variant="ghost" size="icon" onClick={() => alert('Edit clicked')}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => alert('Trash clicked')}>
+                                        <Button variant="destructive" size="icon" onClick={() => alert('Trash clicked')}>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
@@ -295,7 +297,7 @@ export default function EditCoursePage() {
                                                                 <Edit className="h-4 w-4 mr-2" />
                                                                 Edit
                                                             </Button>
-                                                             <Button variant="outline" size="sm" color="destructive">
+                                                             <Button variant="destructive" size="sm">
                                                                 <Trash2 className="h-4 w-4 mr-2" />
                                                                 Delete
                                                             </Button>
@@ -304,25 +306,28 @@ export default function EditCoursePage() {
                                                 )
                                             })}
                                             <li
+                                                id={`dropzone-${index}`}
                                                 className={cn(
-                                                    "mt-4 border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 transition-colors duration-200",
+                                                    "mt-4 border-2 border-dashed border-muted-foreground/20 rounded-lg transition-colors duration-200",
                                                     draggedOverModule === index && draggedItem === null && "border-primary bg-primary/10"
                                                 )}
                                                 onDragOver={(e) => handleDragOver(e, index)}
-                                                onDragEnter={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
-                                                onDragLeave={(e) => { e.preventDefault(); setDraggedOverModule(null); }}
-                                                onDrop={(e) => handleFileUploadDrop(e, index)}
+                                                onDragEnter={(e) => { e.preventDefault(); if(draggedItem === null) setDraggedOverModule(index); }}
+                                                onDragLeave={(e) => { e.preventDefault(); if(draggedItem === null) setDraggedOverModule(null); }}
+                                                onDrop={(e) => handleDrop(e, index)}
                                             >
-                                                <Button variant="outline" size="sm" className="w-full pointer-events-none">
-                                                    <PlusCircle className="h-4 w-4 mr-2" />
-                                                    Add Material
-                                                </Button>
-                                                {draggedOverModule === index && draggedItem === null && (
-                                                    <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
-                                                        <Upload className="h-8 w-8 mb-2" />
-                                                        <p className="font-semibold">Drop files to upload</p>
-                                                    </div>
-                                                )}
+                                                <div className="p-4 w-full">
+                                                    <Button variant="outline" size="sm" className="w-full pointer-events-none">
+                                                        <PlusCircle className="h-4 w-4 mr-2" />
+                                                        Add Material
+                                                    </Button>
+                                                    {draggedOverModule === index && draggedItem === null && (
+                                                        <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
+                                                            <Upload className="h-8 w-8 mb-2" />
+                                                            <p className="font-semibold">Drop files to upload</p>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
