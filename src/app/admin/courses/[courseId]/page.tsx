@@ -1,41 +1,44 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2, Upload } from "lucide-react";
+import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2, Upload, GripVertical } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { cn } from '@/lib/utils';
 
-const courseData = {
+const allCoursesData = {
     "intro-to-community-building": {
         title: "Introduction to Community Building",
         description: "Learn the fundamentals of building and nurturing a thriving community.",
         modules: [
             {
+                id: 'mod1',
                 title: "Module 1: The Basics",
                 materials: [
-                    { type: "announcement", title: "Welcome to the course!" },
-                    { type: "pdf", title: "Course Syllabus", link: "#" },
-                    { type: "quiz", title: "Introductory Quiz", link: "#" },
+                    { id: 'mat1-1', type: "announcement", title: "Welcome to the course!" },
+                    { id: 'mat1-2', type: "pdf", title: "Course Syllabus", link: "#" },
+                    { id: 'mat1-3', type: "quiz", title: "Introductory Quiz", link: "#" },
                 ]
             },
             {
+                id: 'mod2',
                 title: "Module 2: Engagement Strategies",
                 materials: [
-                    { type: "pdf", title: "Reading: Fostering Online Discussions", link: "#" },
-                    { type: "pdf", title: "Case Study: The Reddit Model", link: "#" },
-                    { type: "quiz", title: "Quiz: Engagement Techniques", link: "#" },
+                    { id: 'mat2-1', type: "pdf", title: "Reading: Fostering Online Discussions", link: "#" },
+                    { id: 'mat2-2', type: "pdf", title: "Case Study: The Reddit Model", link: "#" },
+                    { id: 'mat2-3', type: "quiz", title: "Quiz: Engagement Techniques", link: "#" },
                 ]
             },
             {
+                id: 'mod3',
                 title: "Module 3: Scaling Your Community",
                 materials: [
-                    { type: "announcement", title: "Live Q&A Session next week" },
-                    { type: "pdf", title: "Guide to Community Moderation", link: "#" },
+                    { id: 'mat3-1', type: "announcement", title: "Live Q&A Session next week" },
+                    { id: 'mat3-2', type: "pdf", title: "Guide to Community Moderation", link: "#" },
                 ]
             }
         ]
@@ -50,49 +53,145 @@ const materialIcons = {
 };
 
 type Material = {
+    id: string;
     type: keyof typeof materialIcons;
     title: string;
     link?: string;
 }
 
-function getCourseData(courseId: string) {
+type Module = {
+    id: string;
+    title: string;
+    materials: Material[];
+}
+
+type Course = {
+    title: string;
+    description: string;
+    modules: Module[];
+}
+
+function getCourseData(courseId: string): Course | undefined {
     // @ts-ignore
-    return courseData[courseId];
+    return allCoursesData[courseId];
 }
 
 export default function EditCoursePage() {
     const params = useParams();
     const courseId = Array.isArray(params.courseId) ? params.courseId[0] : params.courseId;
-    const course = getCourseData(courseId);
+
+    const [course, setCourse] = useState<Course | null>(null);
     const [draggedOverModule, setDraggedOverModule] = useState<number | null>(null);
+    const [draggedItem, setDraggedItem] = useState<{ moduleIndex: number; materialIndex?: number } | null>(null);
+
+     useEffect(() => {
+        const data = getCourseData(courseId);
+        if (data) {
+            setCourse(data);
+        }
+    }, [courseId]);
+
 
     if (!course) {
-        notFound();
+        // You can return a loading state or a not found component
+        const initialCourse = getCourseData(courseId);
+        if (!initialCourse) {
+             notFound();
+        }
+        if (!course) {
+            setCourse(initialCourse);
+        }
+        return <div>Loading...</div>;
     }
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-    };
 
-    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-        e.preventDefault();
-        setDraggedOverModule(index);
-    };
-
-    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleFileUploadDrop = (e: React.DragEvent<HTMLDivElement>, moduleIndex: number) => {
         e.preventDefault();
         setDraggedOverModule(null);
-    };
+        if (draggedItem !== null) return; // This drop is for reordering, not file upload
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-        e.preventDefault();
-        setDraggedOverModule(null);
         const files = Array.from(e.dataTransfer.files);
-        console.log(`Files dropped in module ${index + 1}:`, files.map(f => f.name));
-        // Here you would typically handle the file upload
-        alert(`${files.length} file(s) dropped in ${course.modules[index].title}. Check the console for details.`);
+        if (files.length > 0) {
+            console.log(`Files dropped in module ${moduleIndex + 1}:`, files.map(f => f.name));
+            // Here you would typically handle the file upload
+            alert(`${files.length} file(s) dropped in ${course.modules[moduleIndex].title}. Check the console for details.`);
+        }
     };
     
+    // Drag and Drop Handlers
+    const handleDragStart = (e: React.DragEvent, moduleIndex: number, materialIndex?: number) => {
+        setDraggedItem({ moduleIndex, materialIndex });
+        e.dataTransfer.effectAllowed = 'move';
+        if (materialIndex !== undefined) {
+             e.dataTransfer.setData('text/plain', `material:${moduleIndex}:${materialIndex}`);
+        } else {
+             e.dataTransfer.setData('text/plain', `module:${moduleIndex}`);
+        }
+    };
+
+    const handleDragOver = (e: React.DragEvent, moduleIndex: number, materialIndex?: number) => {
+        e.preventDefault();
+        if (!draggedItem) { // This is for file upload
+             setDraggedOverModule(moduleIndex);
+             return;
+        }
+
+        const dropTargetModuleIndex = moduleIndex;
+        const dropTargetMaterialIndex = materialIndex;
+        
+        if (draggedItem.materialIndex !== undefined) { // Reordering materials
+            if (draggedItem.moduleIndex === dropTargetModuleIndex && draggedItem.materialIndex !== dropTargetMaterialIndex) {
+                 e.dataTransfer.dropEffect = 'move';
+            } else if (draggedItem.moduleIndex !== dropTargetModuleIndex && materialIndex === undefined) {
+                 e.dataTransfer.dropEffect = 'move'; // Allow moving to another module
+            } else {
+                 e.dataTransfer.dropEffect = 'none';
+            }
+        } else { // Reordering modules
+            if (draggedItem.moduleIndex !== dropTargetModuleIndex) {
+                e.dataTransfer.dropEffect = 'move';
+            } else {
+                e.dataTransfer.dropEffect = 'none';
+            }
+        }
+    };
+
+    const handleDrop = (e: React.DragEvent, targetModuleIndex: number, targetMaterialIndex?: number) => {
+        e.preventDefault();
+        if (!draggedItem) {
+             handleFileUploadDrop(e, targetModuleIndex);
+             return;
+        }
+
+        const newCourse = JSON.parse(JSON.stringify(course));
+        
+        if (draggedItem.materialIndex !== undefined) { // Moving a material
+            const sourceModuleIndex = draggedItem.moduleIndex;
+            const sourceMaterialIndex = draggedItem.materialIndex;
+            
+            const [movedMaterial] = newCourse.modules[sourceModuleIndex].materials.splice(sourceMaterialIndex, 1);
+            
+            if (targetMaterialIndex !== undefined) { // Dropped on another material
+                 newCourse.modules[targetModuleIndex].materials.splice(targetMaterialIndex, 0, movedMaterial);
+            } else { // Dropped on a module (or its content area)
+                newCourse.modules[targetModuleIndex].materials.push(movedMaterial);
+            }
+
+        } else { // Moving a module
+            const sourceModuleIndex = draggedItem.moduleIndex;
+            const [movedModule] = newCourse.modules.splice(sourceModuleIndex, 1);
+            newCourse.modules.splice(targetModuleIndex, 0, movedModule);
+        }
+
+        setCourse(newCourse);
+        setDraggedItem(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedItem(null);
+        setDraggedOverModule(null);
+    };
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -124,17 +223,31 @@ export default function EditCoursePage() {
                         </Button>
                     </CardTitle>
                     <CardDescription>
-                       Manage modules and learning materials for this course. Drag and drop files to upload.
+                       Manage modules and learning materials. Drag and drop to reorder content or upload files.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
-                        {course.modules.map((module: any, index: number) => (
-                            <AccordionItem value={`item-${index}`} key={index}>
-                                <div className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded-md">
-                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2">
-                                        <span>{module.title}</span>
-                                    </AccordionTrigger>
+                    <Accordion type="single" collapsible className="w-full space-y-4" defaultValue="item-0">
+                        {course.modules.map((module: Module, index: number) => (
+                            <AccordionItem 
+                                value={`item-${index}`} 
+                                key={module.id}
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragOver={(e) => handleDragOver(e, index)}
+                                onDrop={(e) => handleDrop(e, index)}
+                                onDragEnd={handleDragEnd}
+                                className="border rounded-lg"
+                            >
+                                <div className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded-t-md">
+                                    <div className="flex items-center flex-1">
+                                        <div className="p-2 cursor-grab">
+                                            <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                        </div>
+                                        <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2">
+                                            <span>{module.title}</span>
+                                        </AccordionTrigger>
+                                    </div>
                                     <div className="flex items-center gap-2 ml-4 pr-4">
                                         <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Edit clicked'); }}>
                                             <Edit className="h-4 w-4" />
@@ -146,21 +259,32 @@ export default function EditCoursePage() {
                                 </div>
                                 <AccordionContent>
                                     <div
-                                        onDragOver={handleDragOver}
-                                        onDragEnter={(e) => handleDragEnter(e, index)}
-                                        onDragLeave={handleDragLeave}
+                                        onDragOver={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
+                                        onDragEnter={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
+                                        onDragLeave={(e) => { e.preventDefault(); setDraggedOverModule(null); }}
                                         onDrop={(e) => handleDrop(e, index)}
                                         className={cn(
-                                            "border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 transition-colors duration-200",
-                                            draggedOverModule === index && "border-primary bg-primary/10"
+                                            "border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 m-4 transition-colors duration-200",
+                                            draggedOverModule === index && draggedItem === null && "border-primary bg-primary/10"
                                         )}
                                     >
                                         <ul className="space-y-4">
                                             {module.materials.map((material: Material, matIndex: number) => {
                                                 const Icon = materialIcons[material.type];
                                                 return (
-                                                    <li key={matIndex} className="flex items-center justify-between p-4 rounded-md bg-muted/50">
+                                                    <li 
+                                                        key={material.id} 
+                                                        className="flex items-center justify-between p-4 rounded-md bg-muted/50"
+                                                        draggable
+                                                        onDragStart={(e) => handleDragStart(e, index, matIndex)}
+                                                        onDragOver={(e) => handleDragOver(e, index, matIndex)}
+                                                        onDrop={(e) => handleDrop(e, index, matIndex)}
+                                                        onDragEnd={handleDragEnd}
+                                                    >
                                                         <div className="flex items-center gap-4">
+                                                            <div className="cursor-grab">
+                                                                <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                                            </div>
                                                             <Icon className="h-5 w-5 text-primary" />
                                                             <span className="font-medium">{material.title}</span>
                                                         </div>
@@ -184,7 +308,7 @@ export default function EditCoursePage() {
                                                 </Button>
                                             </li>
                                         </ul>
-                                         {draggedOverModule === index && (
+                                         {draggedOverModule === index && draggedItem === null && (
                                             <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
                                                 <Upload className="h-8 w-8 mb-2" />
                                                 <p className="font-semibold">Drop files to upload</p>
