@@ -1,23 +1,30 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Target, TrendingUp, Leaf } from "lucide-react";
+import Image from "next/image";
 
 const goals = [
     {
         icon: Target,
         title: "Strategic Impact",
         value: "strategic-impact",
+        image: "https://placehold.co/600x400.png",
+        hint: "community meeting",
         description: "Focus on long-term, sustainable projects that address root causes of community challenges and create lasting positive change."
     },
     {
         icon: TrendingUp,
         title: "Expand Our Reach",
         value: "expand-reach",
+        image: "https://placehold.co/600x400.png",
+        hint: "global network",
         description: "Grow our network of volunteers and partners to support more grassroots movements in new communities and regions."
     },
     {
         icon: Leaf,
         title: "Promote Sustainability",
         value: "promote-sustainability",
+        image: "https://placehold.co/600x400.png",
+        hint: "green energy",
         description: "Champion and implement eco-friendly practices across all our projects, ensuring a healthier planet for future generations."
     }
 ];
@@ -35,7 +42,7 @@ export default function OurGoalsSection() {
                     </p>
                 </div>
                 <div className="mt-12">
-                    <Tabs defaultValue={goals[0].value} className="w-full max-w-2xl mx-auto">
+                    <Tabs defaultValue={goals[0].value} className="w-full max-w-4xl mx-auto">
                         <TabsList className="grid w-full grid-cols-3">
                             {goals.map((goal) => (
                                 <TabsTrigger key={goal.value} value={goal.value} className="flex gap-2 items-center">
@@ -46,8 +53,19 @@ export default function OurGoalsSection() {
                         </TabsList>
                         {goals.map((goal) => (
                             <TabsContent key={goal.value} value={goal.value} className="mt-6">
-                                <div className="text-center p-6 bg-secondary/30 rounded-lg">
-                                    <p className="text-muted-foreground">{goal.description}</p>
+                                <div className="p-6 bg-secondary/30 rounded-lg grid md:grid-cols-2 gap-8 items-center">
+                                    <div className="relative h-64 w-full overflow-hidden rounded-lg">
+                                        <Image
+                                            src={goal.image}
+                                            alt={goal.title}
+                                            layout="fill"
+                                            objectFit="cover"
+                                            data-ai-hint={goal.hint}
+                                        />
+                                    </div>
+                                    <div className="text-left">
+                                      <p className="text-muted-foreground">{goal.description}</p>
+                                    </div>
                                 </div>
                             </TabsContent>
                         ))}
