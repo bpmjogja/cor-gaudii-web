@@ -88,7 +88,7 @@ export default function QuickLinksSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold tracking-tight text-primary font-headline sm:text-4xl">
-              Quick Link
+              Quick Links
             </h2>
             <p className="mt-4 text-lg text-foreground/80">
                 There are many ways to support our mission. Find the one that's right for you.
