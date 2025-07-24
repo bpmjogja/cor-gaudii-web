@@ -64,9 +64,8 @@ export default function AdminPrayersPage() {
                                     </TableCell>
                                     <TableCell className="flex gap-2">
                                         {prayer.status === 'Pending' && (
-                                            <Button variant="outline" size="sm">
-                                                <Check className="h-4 w-4 mr-2" />
-                                                Mark as Prayed For
+                                            <Button variant="outline" size="icon">
+                                                <Check className="h-4 w-4" />
                                             </Button>
                                         )}
                                         <Button variant="outline" size="icon" className="hover:bg-destructive hover:text-destructive-foreground">
