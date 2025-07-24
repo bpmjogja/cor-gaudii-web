@@ -22,7 +22,7 @@ export default function OurServiceSection() {
                             Our Services
                         </div>
                         <h2 className="text-3xl font-bold tracking-tight text-primary font-headline sm:text-4xl">
-                            Expert Consultation
+                            Assistance and Consultation
                         </h2>
                         <p className="text-foreground/80">
                             We provide expert consultation to help organizations and community leaders develop effective strategies for social impact. Our team works closely with you to understand your unique challenges and opportunities, offering tailored guidance on project planning, fundraising, and community engagement.
