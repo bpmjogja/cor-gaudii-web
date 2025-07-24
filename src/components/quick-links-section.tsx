@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Handshake, Calendar, FileText, Copy } from "lucide-react";
+import { ArrowRight, Heart, Handshake, Calendar, FileText, Copy, Church } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -18,15 +18,15 @@ const quickLinks = [
     icon: Heart,
     title: "Donate",
     description: "Support our cause with a one-time or recurring donation.",
-    link: "/support",
+    link: "#",
     hint: "donation icon"
   },
   {
-    icon: Handshake,
-    title: "Get Involved",
-    description: "Join our team of volunteers and make a hands-on difference.",
-    link: "/support",
-    hint: "volunteer icon"
+    icon: Church,
+    title: "Prayer Request",
+    description: "Submit your prayer requests to our dedicated prayer team.",
+    link: "/prayer-request",
+    hint: "prayer icon"
   },
   {
     icon: Calendar,
