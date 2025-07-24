@@ -3,6 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PlusCircle } from "lucide-react";
+import Link from "next/link";
+
+const courses = [
+    {
+        id: "intro-to-community-building",
+        title: "Introduction to Community Building",
+        status: "Published",
+        enrolled: 150
+    },
+    {
+        id: "effective-fundraising-strategies",
+        title: "Effective Fundraising Strategies",
+        status: "Draft",
+        enrolled: 75
+    }
+];
 
 export default function AdminCoursesPage() {
     return (
@@ -30,22 +46,18 @@ export default function AdminCoursesPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow>
-                                <TableCell>Introduction to Community Building</TableCell>
-                                <TableCell>Published</TableCell>
-                                <TableCell>150</TableCell>
+                           {courses.map(course => (
+                             <TableRow key={course.id}>
+                                <TableCell>{course.title}</TableCell>
+                                <TableCell>{course.status}</TableCell>
+                                <TableCell>{course.enrolled}</TableCell>
                                 <TableCell>
-                                    <Button variant="outline" size="sm">Edit</Button>
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={`/admin/courses/${course.id}`}>Edit</Link>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
-                             <TableRow>
-                                <TableCell>Effective Fundraising Strategies</TableCell>
-                                <TableCell>Draft</TableCell>
-                                <TableCell>75</TableCell>
-                                <TableCell>
-                                    <Button variant="outline" size="sm">Edit</Button>
-                                </TableCell>
-                            </TableRow>
+                           ))}
                         </TableBody>
                     </Table>
                 </CardContent>
