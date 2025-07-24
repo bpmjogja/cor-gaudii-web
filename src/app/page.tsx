@@ -5,6 +5,7 @@ import Footer from '@/components/footer';
 import QuickLinksSection from '@/components/quick-links-section';
 import WhatWeDoSection from '@/components/what-we-do-section';
 import OurGoalsSection from '@/components/our-goals-section';
+import OurServiceSection from '@/components/our-service-section';
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <AboutSection />
         <WhatWeDoSection />
         <OurGoalsSection />
+        <OurServiceSection />
         <QuickLinksSection />
       </main>
       <Footer />
