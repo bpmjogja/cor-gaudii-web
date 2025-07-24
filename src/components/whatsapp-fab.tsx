@@ -28,7 +28,7 @@ export default function WhatsappFAB() {
                 rel="noopener noreferrer"
                 aria-label="Contact us on WhatsApp"
               >
-                <MessageCircle className="h-12 w-12" />
+                <MessageCircle className="h-12 w-12 scale-150" />
               </Link>
             </Button>
           </div>
