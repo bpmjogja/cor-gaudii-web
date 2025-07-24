@@ -189,7 +189,7 @@ export default function QuickLinksSection() {
                 ) : (
                     <Button asChild variant="link" className="p-0 text-primary hover:text-accent">
                         <Link href={link.link}>
-                            Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                            {link.title === 'Upcoming Events' ? 'View Events' : 'Read Articles'} <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                     </Button>
                 )}
