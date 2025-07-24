@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Newspaper } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useState } from 'react';
 
 // In a real app, you'd fetch this from a CMS
 const allArticles = [
@@ -57,8 +56,6 @@ export default function EditArticlePage() {
     
     const articleData = getArticleData(slug);
     
-    const [content, setContent] = useState(articleData?.content || '');
-
     if (!articleData) {
         notFound();
     }
@@ -108,23 +105,12 @@ export default function EditArticlePage() {
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="content">Main Content (Markdown)</Label>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <Textarea 
-                                id="content" 
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                className="min-h-[350px] font-mono text-sm" 
-                                placeholder="## Start writing your article content here using Markdown..." 
-                            />
-                             <div className="border rounded-md p-4 bg-muted/20 min-h-[350px]">
-                                <h3 className="text-lg font-semibold mb-2 border-b pb-2">Preview</h3>
-                                <div className="prose prose-sm max-w-none text-foreground/80">
-                                   <pre className="whitespace-pre-wrap font-sans text-sm bg-transparent p-0">
-                                    {content || <span className="text-muted-foreground">Type something to see a preview...</span>}
-                                   </pre>
-                                </div>
-                            </div>
-                        </div>
+                        <Textarea 
+                            id="content" 
+                            defaultValue={article.content}
+                            className="min-h-[350px] font-mono text-sm" 
+                            placeholder="## Start writing your article content here using Markdown..." 
+                        />
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
