@@ -98,10 +98,10 @@ export default function EditCoursePage() {
         if (!initialCourse) {
              notFound();
         }
+        // This is a temporary fix for the initial load, a better solution might be a loading state
         if (!course) {
-            setCourse(initialCourse);
+            return <div>Loading...</div>;
         }
-        return <div>Loading...</div>;
     }
 
 
@@ -137,10 +137,9 @@ export default function EditCoursePage() {
         }
 
         const dropTargetModuleIndex = moduleIndex;
-        const dropTargetMaterialIndex = materialIndex;
         
         if (draggedItem.materialIndex !== undefined) { // Reordering materials
-            if (draggedItem.moduleIndex === dropTargetModuleIndex && draggedItem.materialIndex !== dropTargetMaterialIndex) {
+            if (draggedItem.moduleIndex === dropTargetModuleIndex) {
                  e.dataTransfer.dropEffect = 'move';
             } else if (draggedItem.moduleIndex !== dropTargetModuleIndex && materialIndex === undefined) {
                  e.dataTransfer.dropEffect = 'move'; // Allow moving to another module
@@ -158,8 +157,10 @@ export default function EditCoursePage() {
 
     const handleDrop = (e: React.DragEvent, targetModuleIndex: number, targetMaterialIndex?: number) => {
         e.preventDefault();
-        if (!draggedItem) {
-             handleFileUploadDrop(e, targetModuleIndex);
+        if (!draggedItem || !course) {
+             if (!draggedItem) {
+                handleFileUploadDrop(e, targetModuleIndex);
+             }
              return;
         }
 
@@ -171,11 +172,8 @@ export default function EditCoursePage() {
             
             const [movedMaterial] = newCourse.modules[sourceModuleIndex].materials.splice(sourceMaterialIndex, 1);
             
-            if (targetMaterialIndex !== undefined) { // Dropped on another material
-                 newCourse.modules[targetModuleIndex].materials.splice(targetMaterialIndex, 0, movedMaterial);
-            } else { // Dropped on a module (or its content area)
-                newCourse.modules[targetModuleIndex].materials.push(movedMaterial);
-            }
+            const dropIndex = targetMaterialIndex !== undefined ? targetMaterialIndex : newCourse.modules[targetModuleIndex].materials.length;
+            newCourse.modules[targetModuleIndex].materials.splice(dropIndex, 0, movedMaterial);
 
         } else { // Moving a module
             const sourceModuleIndex = draggedItem.moduleIndex;
@@ -237,16 +235,14 @@ export default function EditCoursePage() {
                                 onDragOver={(e) => handleDragOver(e, index)}
                                 onDrop={(e) => handleDrop(e, index)}
                                 onDragEnd={handleDragEnd}
-                                className="border rounded-lg"
+                                className="border rounded-lg bg-card"
                             >
-                                <div className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded-t-md">
+                                <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2 hover:bg-muted/50 rounded-t-md">
                                     <div className="flex items-center flex-1">
                                         <div className="p-2 cursor-grab">
                                             <GripVertical className="h-5 w-5 text-muted-foreground" />
                                         </div>
-                                        <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2">
-                                            <span>{module.title}</span>
-                                        </AccordionTrigger>
+                                        <span>{module.title}</span>
                                     </div>
                                     <div className="flex items-center gap-2 ml-4 pr-4">
                                         <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Edit clicked'); }}>
@@ -256,7 +252,7 @@ export default function EditCoursePage() {
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
-                                </div>
+                                </AccordionTrigger>
                                 <AccordionContent>
                                     <div
                                         onDragOver={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
