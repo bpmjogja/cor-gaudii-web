@@ -22,6 +22,7 @@ export default function Header() {
     { href: "/about", label: "About" },
     { href: "/articles", label: "Articles" },
     { href: "/events", label: "Events" },
+    { href: "/member", label: "Member Area" },
     { href: "/admin", label: "Admin"},
   ];
 
@@ -65,7 +66,7 @@ export default function Header() {
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
-                <SheetTitle>Navigation Menu</SheetTitle>
+                <SheetTitle>Navigation</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-6 p-6">
               <Link href="/" className="flex items-center gap-2" prefetch={false}>

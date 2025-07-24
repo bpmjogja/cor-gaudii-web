@@ -2,17 +2,16 @@
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Mountain, Newspaper, Users, Calendar, LogOut, Home } from "lucide-react";
-import { User } from "lucide-react";
+import { Menu, Mountain, BookOpen, FileQuestion, MessageSquare, LayoutDashboard, LogOut, Home, User } from "lucide-react";
 
-const adminNavLinks = [
-    { href: "/admin", label: "Dashboard", icon: Mountain },
-    { href: "/admin/articles", label: "Articles", icon: Newspaper },
-    { href: "/admin/members", label: "Members", icon: Users },
-    { href: "/admin/events", label: "Events", icon: Calendar },
+const memberNavLinks = [
+    { href: "/member", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/member/learning", label: "Learning", icon: BookOpen },
+    { href: "/member/quizzes", label: "Quizzes", icon: FileQuestion },
+    { href: "/member/consultation", label: "Consultation", icon: MessageSquare },
 ]
 
-export default function AdminLayout({
+export default function MemberLayout({
   children,
 }: {
   children: React.ReactNode
@@ -24,12 +23,12 @@ export default function AdminLayout({
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Mountain className="h-6 w-6 text-primary" />
-              <span className="font-headline">BPM Admin</span>
+              <span className="font-headline">BPM Member</span>
             </Link>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              {adminNavLinks.map(link => (
+              {memberNavLinks.map(link => (
                 <Link
                     key={link.href}
                     href={link.href}
@@ -41,7 +40,7 @@ export default function AdminLayout({
               ))}
             </nav>
           </div>
-           <div className="mt-auto p-4 border-t">
+          <div className="mt-auto p-4 border-t">
             <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                 <Home className="h-4 w-4" />
                 <span>Back to Website</span>
@@ -73,9 +72,9 @@ export default function AdminLayout({
                   className="flex items-center gap-2 text-lg font-semibold mb-4"
                 >
                   <Mountain className="h-6 w-6 text-primary" />
-                  <span className="font-headline">BPM Admin</span>
+                  <span className="font-headline">BPM Member</span>
                 </Link>
-                {adminNavLinks.map(link => (
+                {memberNavLinks.map(link => (
                     <Link
                         key={link.href}
                         href={link.href}
@@ -86,8 +85,8 @@ export default function AdminLayout({
                     </Link>
                 ))}
               </nav>
-              <div className="mt-auto p-4 border-t">
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+               <div className="mt-auto p-4 border-t">
+                 <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                     <Home className="h-4 w-4" />
                     <span>Back to Website</span>
                 </Link>
@@ -98,9 +97,9 @@ export default function AdminLayout({
               </div>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1">
-            <div className="flex items-center justify-end gap-4">
-                <span className="text-sm text-muted-foreground">Admin User</span>
+           <div className="w-full flex-1">
+             <div className="flex items-center justify-end gap-4">
+                <span className="text-sm text-muted-foreground">Member User</span>
                 <User className="h-6 w-6 text-muted-foreground" />
             </div>
           </div>
