@@ -7,24 +7,28 @@ import { BookOpen } from "lucide-react";
 
 const enrolledCourses = [
     {
+        id: "intro-to-community-building",
         title: "Introduction to Community Building",
         description: "Learn the fundamentals of building and nurturing a thriving community.",
         image: "https://placehold.co/600x400.png",
         hint: "community group"
     },
     {
+        id: "effective-fundraising-strategies",
         title: "Effective Fundraising Strategies",
         description: "Discover proven strategies to raise funds for your non-profit initiatives.",
         image: "https://placehold.co/600x400.png",
         hint: "money chart"
     },
     {
+        id: "social-media-for-social-good",
         title: "Social Media for Social Good",
         description: "Harness the power of social media to amplify your message and impact.",
         image: "https://placehold.co/600x400.png",
         hint: "social media icons"
     },
      {
+        id: "volunteer-management-101",
         title: "Volunteer Management 101",
         description: "Best practices for recruiting, training, and retaining dedicated volunteers.",
         image: "https://placehold.co/600x400.png",
@@ -46,7 +50,7 @@ export default function LearningPage() {
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-4">
                 {enrolledCourses.map((course) => (
-                    <Card key={course.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <Card key={course.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                         <CardHeader className="p-0">
                             <Image
                                 src={course.image}
@@ -57,12 +61,14 @@ export default function LearningPage() {
                                 data-ai-hint={course.hint}
                             />
                         </CardHeader>
-                        <CardContent className="p-6">
+                        <CardContent className="p-6 flex-grow">
                             <CardTitle className="font-headline text-xl">{course.title}</CardTitle>
                             <p className="mt-2 text-sm text-muted-foreground">{course.description}</p>
                         </CardContent>
                         <CardFooter>
-                           <Button>Continue Learning</Button>
+                           <Button asChild>
+                                <Link href={`/member/learning/${course.id}`}>Continue Learning</Link>
+                           </Button>
                         </CardFooter>
                     </Card>
                 ))}
