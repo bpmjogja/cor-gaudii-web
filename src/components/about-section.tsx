@@ -5,15 +5,15 @@ const ministries = [
   {
     name: "Leadership",
     members: [
-      { name: "John Doe", role: "Founder & CEO", initials: "JD", image: "https://placehold.co/100x100.png", hint: "man portrait" },
-      { name: "Jane Smith", role: "Director of Operations", initials: "JS", image: "https://placehold.co/100x100.png", hint: "woman portrait" },
+      { role: "Founder & CEO", initials: "JD", image: "https://placehold.co/100x100.png", hint: "man portrait" },
+      { role: "Director of Operations", initials: "JS", image: "https://placehold.co/100x100.png", hint: "woman portrait" },
     ],
   },
   {
     name: "Community Engagement",
     members: [
-      { name: "Samuel Green", role: "Community Manager", initials: "SG", image: "https://placehold.co/100x100.png", hint: "person smiling" },
-      { name: "Emily White", role: "Lead Volunteer", initials: "EW", image: "https://placehold.co/100x100.png", hint: "woman smiling" },
+      { role: "Community Manager", initials: "SG", image: "https://placehold.co/100x100.png", hint: "person smiling" },
+      { role: "Lead Volunteer", initials: "EW", image: "https://placehold.co/100x100.png", hint: "woman smiling" },
     ],
   },
 ];
@@ -48,13 +48,12 @@ export default function AboutSection() {
                 </h4>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-2">
                   {ministry.members.map((member) => (
-                    <div key={member.name} className="flex flex-col items-center text-center">
+                    <div key={member.role} className="flex flex-col items-center text-center">
                       <Avatar className="h-24 w-24 mb-2 border-2 border-primary/20">
-                        <AvatarImage src={member.image} alt={member.name} data-ai-hint={member.hint} />
+                        <AvatarImage src={member.image} alt={member.role} data-ai-hint={member.hint} />
                         <AvatarFallback>{member.initials}</AvatarFallback>
                       </Avatar>
-                      <h4 className="font-bold font-headline text-primary">{member.name}</h4>
-                      <p className="text-xs text-muted-foreground">{member.role}</p>
+                      <p className="text-sm text-muted-foreground">{member.role}</p>
                     </div>
                   ))}
                 </div>
