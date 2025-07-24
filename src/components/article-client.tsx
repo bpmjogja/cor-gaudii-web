@@ -1,11 +1,12 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { Play, Pause, Square } from "lucide-react";
 
 type Article = {
@@ -22,22 +23,24 @@ export default function ArticleClient({ article }: { article: Article }) {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [speech, setSpeech] = useState<SpeechSynthesis | null>(null);
+    const [progress, setProgress] = useState(0);
+
+    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+    const articleTextRef = useRef<string>("");
 
     useEffect(() => {
-        // Ensure this code runs only on the client
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
             setSpeech(window.speechSynthesis);
+            articleTextRef.current = extractTextFromHtml(article.content);
         }
-    }, []);
 
-    useEffect(() => {
         // Cleanup speech synthesis on component unmount
         return () => {
-            if (speech) {
-                speech.cancel();
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
             }
         };
-    }, [speech]);
+    }, [article.content]);
 
     const extractTextFromHtml = (html: string) => {
         if (typeof window === 'undefined') return '';
@@ -46,22 +49,43 @@ export default function ArticleClient({ article }: { article: Article }) {
     };
 
     const handlePlay = () => {
-        if (!speech || !article) return;
+        if (!speech || !articleTextRef.current) return;
 
-        if (isPaused) {
+        if (speech.paused && isPaused) {
             speech.resume();
             setIsPaused(false);
+            setIsSpeaking(true);
         } else {
-            const textToSpeak = extractTextFromHtml(article.content);
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            speech.cancel(); // Stop any previous speech
+            
+            const utterance = new SpeechSynthesisUtterance(articleTextRef.current);
+            utteranceRef.current = utterance;
+
+            utterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    const charIndex = event.charIndex;
+                    const totalLength = articleTextRef.current.length;
+                    setProgress(totalLength > 0 ? (charIndex / totalLength) * 100 : 0);
+                }
+            };
+
             utterance.onend = () => {
                 setIsSpeaking(false);
                 setIsPaused(false);
+                setProgress(100);
+                 setTimeout(() => setProgress(0), 1000);
             };
-            speech.cancel(); // Clear any previous speech
+            
+            utterance.onerror = (event) => {
+                console.error("SpeechSynthesisUtterance.onerror", event);
+                setIsSpeaking(false);
+                setIsPaused(false);
+            };
+
             speech.speak(utterance);
+            setIsSpeaking(true);
+            setIsPaused(false);
         }
-        setIsSpeaking(true);
     };
 
     const handlePause = () => {
@@ -77,6 +101,51 @@ export default function ArticleClient({ article }: { article: Article }) {
             speech.cancel();
             setIsSpeaking(false);
             setIsPaused(false);
+            setProgress(0);
+        }
+    };
+
+    const handleSliderChange = (value: number[]) => {
+        const newProgress = value[0];
+        setProgress(newProgress);
+
+        if (speech && articleTextRef.current) {
+             const wasSpeaking = isSpeaking || isPaused;
+             speech.cancel();
+             setIsSpeaking(false);
+             setIsPaused(false);
+
+             if (wasSpeaking) {
+                const newStartIndex = Math.floor((articleTextRef.current.length * newProgress) / 100);
+                const textToSpeak = articleTextRef.current.substring(newStartIndex);
+                
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utteranceRef.current = utterance;
+
+                utterance.onboundary = (event) => {
+                     if (event.name === 'word') {
+                        const charIndex = newStartIndex + event.charIndex;
+                        const totalLength = articleTextRef.current.length;
+                        setProgress(totalLength > 0 ? (charIndex / totalLength) * 100 : 0);
+                    }
+                };
+
+                utterance.onend = () => {
+                    setIsSpeaking(false);
+                    setIsPaused(false);
+                    setProgress(100);
+                    setTimeout(() => setProgress(0), 1000);
+                };
+
+                 utterance.onerror = (event) => {
+                    console.error("SpeechSynthesisUtterance.onerror", event);
+                    setIsSpeaking(false);
+                    setIsPaused(false);
+                };
+                
+                speech.speak(utterance);
+                setIsSpeaking(true);
+             }
         }
     };
 
@@ -106,31 +175,39 @@ export default function ArticleClient({ article }: { article: Article }) {
                                 />
                             </div>
 
-                            <div className="my-6 flex items-center gap-4">
-                                {!isSpeaking && !isPaused ? (
-                                     <Button onClick={handlePlay} aria-label="Listen to article">
-                                        <Play className="mr-2 h-5 w-5" />
-                                        Listen
-                                    </Button>
-                                ) : (
-                                    <>
-                                        {isPaused ? (
-                                            <Button onClick={handlePlay} aria-label="Resume article">
-                                                <Play className="mr-2 h-5 w-5" />
-                                                Resume
-                                            </Button>
-                                        ) : (
-                                            <Button onClick={handlePause} aria-label="Pause article">
-                                                <Pause className="mr-2 h-5 w-5" />
-                                                Pause
-                                            </Button>
-                                        )}
-                                        <Button onClick={handleStop} variant="destructive" aria-label="Stop listening">
-                                            <Square className="mr-2 h-5 w-5" />
-                                            Stop
+                            <div className="p-4 rounded-lg bg-muted/50 my-6">
+                                <div className="flex items-center gap-4">
+                                    {!isSpeaking && !isPaused ? (
+                                        <Button onClick={handlePlay} aria-label="Listen to article" size="icon">
+                                            <Play className="h-5 w-5" />
                                         </Button>
-                                    </>
-                                )}
+                                    ) : (
+                                        <>
+                                            {isPaused ? (
+                                                <Button onClick={handlePlay} aria-label="Resume article" size="icon">
+                                                    <Play className="h-5 w-5" />
+                                                </Button>
+                                            ) : (
+                                                <Button onClick={handlePause} aria-label="Pause article" size="icon">
+                                                    <Pause className="h-5 w-5" />
+                                                </Button>
+                                            )}
+                                        </>
+                                    )}
+                                     <Slider
+                                        value={[progress]}
+                                        onValueChange={handleSliderChange}
+                                        max={100}
+                                        step={1}
+                                        className="flex-1"
+                                        aria-label="Article playback progress"
+                                    />
+                                    {isSpeaking || isPaused ? (
+                                         <Button onClick={handleStop} variant="destructive" aria-label="Stop listening" size="icon">
+                                            <Square className="h-5 w-5" />
+                                        </Button>
+                                    ) : null}
+                                </div>
                             </div>
 
                             <div className="prose prose-lg max-w-none mx-auto text-foreground/80" dangerouslySetInnerHTML={{ __html: article.content }} />
