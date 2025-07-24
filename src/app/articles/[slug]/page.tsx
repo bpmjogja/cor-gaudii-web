@@ -1,7 +1,6 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import Image from "next/image";
+
 import { notFound } from "next/navigation";
+import ArticleClient from "@/components/article-client";
 
 // In a real app, you'd fetch this from a CMS
 const allArticles = [
@@ -56,6 +55,7 @@ function getArticleData(slug: string) {
     return allArticles.find(article => article.slug === slug);
 }
 
+// This function runs on the server during build time
 export async function generateStaticParams() {
     return allArticles.map(article => ({
         slug: article.slug,
@@ -69,37 +69,5 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         notFound();
     }
 
-    return (
-        <div className="flex flex-col min-h-screen bg-background">
-            <Header />
-            <main className="flex-1">
-                <article>
-                    <header className="py-12 md:py-16 bg-secondary">
-                        <div className="container mx-auto px-4 md:px-6">
-                            <div className="max-w-3xl mx-auto text-center">
-                                <h1 className="text-3xl font-bold tracking-tight text-primary font-headline sm:text-4xl md:text-5xl">{article.title}</h1>
-                                <p className="mt-4 text-sm text-muted-foreground">{article.date}</p>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div className="container mx-auto px-4 md:px-6 py-8">
-                         <div className="max-w-4xl mx-auto">
-                            <div className="relative h-96 w-full overflow-hidden rounded-lg my-8">
-                                <Image
-                                    src={article.image}
-                                    alt={article.title}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    data-ai-hint={article.hint}
-                                />
-                            </div>
-                            <div className="prose prose-lg max-w-none mx-auto text-foreground/80" dangerouslySetInnerHTML={{ __html: article.content }} />
-                        </div>
-                    </div>
-                </article>
-            </main>
-            <Footer />
-        </div>
-    );
+    return <ArticleClient article={article} />;
 }
