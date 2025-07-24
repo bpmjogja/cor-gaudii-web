@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -101,11 +103,11 @@ export default function EditCoursePage({ params }: { params: { courseId: string 
                     <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
                         {course.modules.map((module: any, index: number) => (
                             <AccordionItem value={`item-${index}`} key={index}>
-                                <div className="flex items-center justify-between w-full py-4">
-                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left">
+                                <div className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded-md">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2">
                                         <span>{module.title}</span>
                                     </AccordionTrigger>
-                                    <div className="flex items-center gap-2 ml-4">
+                                    <div className="flex items-center gap-2 ml-4 pr-4">
                                         <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Edit clicked'); }}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
