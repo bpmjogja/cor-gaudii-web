@@ -99,9 +99,8 @@ export default function EditCoursePage() {
              notFound();
         }
         // This is a temporary fix for the initial load, a better solution might be a loading state
-        if (!course) {
-            return <div>Loading...</div>;
-        }
+        setCourse(initialCourse);
+        return <div>Loading...</div>;
     }
 
 
@@ -133,22 +132,14 @@ export default function EditCoursePage() {
         e.preventDefault();
         if (!draggedItem) { // This is for file upload
              setDraggedOverModule(moduleIndex);
+             e.dataTransfer.dropEffect = 'copy';
              return;
         }
 
         const dropTargetModuleIndex = moduleIndex;
         
         if (draggedItem.materialIndex !== undefined) { // Reordering materials
-            if (draggedItem.moduleIndex === dropTargetModuleIndex) {
-                 e.dataTransfer.dropEffect = 'move';
-            } else if (draggedItem.moduleIndex !== dropTargetModuleIndex && materialIndex === undefined) {
-                 e.dataTransfer.dropEffect = 'move'; // Allow moving to another module
-            } else if (draggedItem.moduleIndex !== dropTargetModuleIndex && materialIndex !== undefined) {
-                e.dataTransfer.dropEffect = 'move'; // Allow moving to another material slot in another module
-            }
-             else {
-                 e.dataTransfer.dropEffect = 'none';
-            }
+            e.dataTransfer.dropEffect = 'move';
         } else { // Reordering modules
             if (draggedItem.moduleIndex !== dropTargetModuleIndex) {
                 e.dataTransfer.dropEffect = 'move';
@@ -160,6 +151,7 @@ export default function EditCoursePage() {
 
     const handleDrop = (e: React.DragEvent, targetModuleIndex: number, targetMaterialIndex?: number) => {
         e.preventDefault();
+        setDraggedOverModule(null);
         if (!draggedItem || !course) {
              if (!draggedItem) {
                 handleFileUploadDrop(e, targetModuleIndex);
@@ -195,6 +187,13 @@ export default function EditCoursePage() {
     const handleDragEnd = () => {
         setDraggedItem(null);
         setDraggedOverModule(null);
+    };
+
+    const handleModuleDragOver = (e: React.DragEvent, moduleIndex: number) => {
+        e.preventDefault();
+        if (draggedItem && draggedItem.materialIndex === undefined) {
+            handleDragOver(e, moduleIndex);
+        }
     };
 
     return (
@@ -238,7 +237,7 @@ export default function EditCoursePage() {
                                 key={module.id}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e) => handleDragOver(e, index)}
+                                onDragOver={(e) => handleModuleDragOver(e, index)}
                                 onDrop={(e) => handleDrop(e, index)}
                                 onDragEnd={handleDragEnd}
                                 className="border rounded-lg bg-card"
@@ -248,11 +247,11 @@ export default function EditCoursePage() {
                                 className="border-b-0"
                             >
                                 <div className="flex items-center pr-4 hover:bg-muted/50 rounded-t-md">
-                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2 ">
+                                     <div className="p-2 cursor-grab">
+                                        <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                    </div>
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-0 py-2 ">
                                         <div className="flex items-center flex-1">
-                                            <div className="p-2 cursor-grab">
-                                                <GripVertical className="h-5 w-5 text-muted-foreground" />
-                                            </div>
                                             <span>{module.title}</span>
                                         </div>
                                     </AccordionTrigger>
@@ -267,14 +266,9 @@ export default function EditCoursePage() {
                                 </div>
                                 <AccordionContent>
                                     <div
-                                        onDragOver={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
-                                        onDragEnter={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
-                                        onDragLeave={(e) => { e.preventDefault(); setDraggedOverModule(null); }}
+                                        className="p-4 m-4 mt-0"
                                         onDrop={(e) => handleDrop(e, index)}
-                                        className={cn(
-                                            "border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 m-4 transition-colors duration-200",
-                                            draggedOverModule === index && draggedItem === null && "border-primary bg-primary/10"
-                                        )}
+                                        onDragOver={(e) => handleDragOver(e, index)}
                                     >
                                         <ul className="space-y-4">
                                             {module.materials.map((material: Material, matIndex: number) => {
@@ -309,19 +303,28 @@ export default function EditCoursePage() {
                                                     </li>
                                                 )
                                             })}
-                                            <li className="mt-4">
-                                                <Button variant="outline" size="sm" className="w-full">
+                                            <li
+                                                className={cn(
+                                                    "mt-4 border-2 border-dashed border-muted-foreground/20 rounded-lg p-4 transition-colors duration-200",
+                                                    draggedOverModule === index && draggedItem === null && "border-primary bg-primary/10"
+                                                )}
+                                                onDragOver={(e) => handleDragOver(e, index)}
+                                                onDragEnter={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
+                                                onDragLeave={(e) => { e.preventDefault(); setDraggedOverModule(null); }}
+                                                onDrop={(e) => handleFileUploadDrop(e, index)}
+                                            >
+                                                <Button variant="outline" size="sm" className="w-full pointer-events-none">
                                                     <PlusCircle className="h-4 w-4 mr-2" />
                                                     Add Material
                                                 </Button>
+                                                {draggedOverModule === index && draggedItem === null && (
+                                                    <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
+                                                        <Upload className="h-8 w-8 mb-2" />
+                                                        <p className="font-semibold">Drop files to upload</p>
+                                                    </div>
+                                                )}
                                             </li>
                                         </ul>
-                                         {draggedOverModule === index && draggedItem === null && (
-                                            <div className="flex flex-col items-center justify-center pointer-events-none text-primary pt-4">
-                                                <Upload className="h-8 w-8 mb-2" />
-                                                <p className="font-semibold">Drop files to upload</p>
-                                            </div>
-                                        )}
                                     </div>
                                 </AccordionContent>
                             </AccordionItem>
