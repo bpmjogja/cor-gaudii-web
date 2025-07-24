@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Mountain, BookOpen, FileQuestion, MessageSquare, LayoutDashboard, LogOut, Home, User } from "lucide-react";
 
@@ -66,14 +66,18 @@ export default function MemberLayout({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
+              <SheetHeader>
+                <SheetTitle>
+                    <Link
+                      href="/"
+                      className="flex items-center gap-2 text-lg font-semibold mb-4"
+                    >
+                      <Mountain className="h-6 w-6 text-primary" />
+                      <span className="font-headline">BPM Member</span>
+                    </Link>
+                </SheetTitle>
+              </SheetHeader>
               <nav className="grid gap-2 text-lg font-medium">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 text-lg font-semibold mb-4"
-                >
-                  <Mountain className="h-6 w-6 text-primary" />
-                  <span className="font-headline">BPM Member</span>
-                </Link>
                 {memberNavLinks.map(link => (
                     <Link
                         key={link.href}
