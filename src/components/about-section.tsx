@@ -1,11 +1,21 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const teamMembers = [
-  { name: "John Doe", role: "Founder & CEO", initials: "JD", image: "https://placehold.co/100x100.png", hint: "man portrait" },
-  { name: "Jane Smith", role: "Director of Operations", initials: "JS", image: "https://placehold.co/100x100.png", hint: "woman portrait" },
-  { name: "Samuel Green", role: "Community Manager", initials: "SG", image: "https://placehold.co/100x100.png", hint: "person smiling" },
-  { name: "Emily White", role: "Lead Volunteer", initials: "EW", image: "https://placehold.co/100x100.png", hint: "woman smiling" },
+const ministries = [
+  {
+    name: "Leadership",
+    members: [
+      { name: "John Doe", role: "Founder & CEO", initials: "JD", image: "https://placehold.co/100x100.png", hint: "man portrait" },
+      { name: "Jane Smith", role: "Director of Operations", initials: "JS", image: "https://placehold.co/100x100.png", hint: "woman portrait" },
+    ],
+  },
+  {
+    name: "Community Engagement",
+    members: [
+      { name: "Samuel Green", role: "Community Manager", initials: "SG", image: "https://placehold.co/100x100.png", hint: "person smiling" },
+      { name: "Emily White", role: "Lead Volunteer", initials: "EW", image: "https://placehold.co/100x100.png", hint: "woman smiling" },
+    ],
+  },
 ];
 
 export default function AboutSection() {
@@ -28,21 +38,28 @@ export default function AboutSection() {
             </p>
           </div>
           <div className="space-y-8">
-             <h3 className="text-2xl font-bold tracking-tight text-primary font-headline sm:text-3xl text-center md:text-left">
+            <h3 className="text-2xl font-bold tracking-tight text-primary font-headline sm:text-3xl text-center md:text-left">
               Meet Our Team
             </h3>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-2">
-              {teamMembers.map((member) => (
-                <div key={member.name} className="flex flex-col items-center text-center">
-                  <Avatar className="h-24 w-24 mb-2 border-2 border-primary/20">
-                    <AvatarImage src={member.image} alt={member.name} data-ai-hint={member.hint} />
-                    <AvatarFallback>{member.initials}</AvatarFallback>
-                  </Avatar>
-                  <h4 className="font-bold font-headline text-primary">{member.name}</h4>
-                  <p className="text-xs text-muted-foreground">{member.role}</p>
+            {ministries.map((ministry) => (
+              <div key={ministry.name}>
+                <h4 className="mb-4 text-xl font-semibold tracking-tight text-accent font-headline sm:text-2xl text-center md:text-left">
+                  {ministry.name} Ministry
+                </h4>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-2">
+                  {ministry.members.map((member) => (
+                    <div key={member.name} className="flex flex-col items-center text-center">
+                      <Avatar className="h-24 w-24 mb-2 border-2 border-primary/20">
+                        <AvatarImage src={member.image} alt={member.name} data-ai-hint={member.hint} />
+                        <AvatarFallback>{member.initials}</AvatarFallback>
+                      </Avatar>
+                      <h4 className="font-bold font-headline text-primary">{member.name}</h4>
+                      <p className="text-xs text-muted-foreground">{member.role}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
