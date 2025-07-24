@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Newspaper } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
 
 // In a real app, you'd fetch this from a CMS
 const allArticles = [
@@ -54,14 +55,18 @@ export default function EditArticlePage() {
     const router = useRouter();
     const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
     
-    const article = getArticleData(slug);
+    const articleData = getArticleData(slug);
+    
+    const [content, setContent] = useState(articleData?.content || '');
 
-    if (!article) {
+    if (!articleData) {
         notFound();
     }
+    
+    const {isNew, ...article} = articleData;
 
-    const pageTitle = article.isNew ? "Create New Article" : "Edit Article";
-    const pageDescription = article.isNew ? "Fill in the details to publish a new article." : `Editing the article: ${article.title}`;
+    const pageTitle = isNew ? "Create New Article" : "Edit Article";
+    const pageDescription = isNew ? "Fill in the details to publish a new article." : `Editing the article: ${article.title}`;
 
     return (
         <div className="flex flex-col gap-6">
@@ -83,7 +88,7 @@ export default function EditArticlePage() {
                         <span>Article Content</span>
                     </CardTitle>
                     <CardDescription>
-                       Fill out the form below to {article.isNew ? "create" : "update"} the article.
+                       Fill out the form below to {isNew ? "create" : "update"} the article.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -103,7 +108,23 @@ export default function EditArticlePage() {
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="content">Main Content (Markdown)</Label>
-                        <Textarea id="content" defaultValue={article.content} className="min-h-[250px] font-mono" placeholder="## Start writing your article content here using Markdown..." />
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <Textarea 
+                                id="content" 
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                                className="min-h-[350px] font-mono text-sm" 
+                                placeholder="## Start writing your article content here using Markdown..." 
+                            />
+                             <div className="border rounded-md p-4 bg-muted/20 min-h-[350px]">
+                                <h3 className="text-lg font-semibold mb-2 border-b pb-2">Preview</h3>
+                                <div className="prose prose-sm max-w-none text-foreground/80">
+                                   <pre className="whitespace-pre-wrap font-sans text-sm bg-transparent p-0">
+                                    {content || <span className="text-muted-foreground">Type something to see a preview...</span>}
+                                   </pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
@@ -125,7 +146,7 @@ export default function EditArticlePage() {
                     </div>
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4">
-                    <Button>{article.isNew ? "Publish Article" : "Save Changes"}</Button>
+                    <Button>{isNew ? "Publish Article" : "Save Changes"}</Button>
                 </CardFooter>
             </Card>
         </div>
