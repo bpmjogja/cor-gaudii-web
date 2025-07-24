@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -10,7 +11,7 @@ const allArticles = [
       image: "https://placehold.co/600x400.png",
       date: "October 28, 2024",
       title: "Volunteer Drive Success",
-      description: "A huge thank you to everyone who signed up during our fall volunteer drive. Your support is invaluable. We welcomed over 50 new volunteers to our team.",
+      keywords: "volunteers, community, support",
       slug: "volunteer-drive-success",
       hint: "volunteers group"
     },
@@ -18,7 +19,7 @@ const allArticles = [
       image: "https://placehold.co/600x400.png",
       date: "September 5, 2024",
       title: "New Partnership Announced",
-      description: "We're excited to partner with Local Corp to expand our reach and impact in the community. This partnership will help us launch three new initiatives in the coming year.",
+      keywords: "partnership, community, initiatives",
       slug: "new-partnership-announced",
       hint: "business handshake"
     },
@@ -26,7 +27,7 @@ const allArticles = [
       image: "https://placehold.co/600x400.png",
       date: "August 12, 2024",
       title: "Summer Youth Program Wraps Up",
-      description: "Our summer youth program concluded with a showcase of the amazing projects created by the participants. It was a fantastic season of learning and growth.",
+      keywords: "youth, summer program, education",
       slug: "summer-youth-program-wraps-up",
       hint: "children learning"
     },
@@ -34,7 +35,7 @@ const allArticles = [
       image: "https://placehold.co/600x400.png",
       date: "July 20, 2024",
       title: "Community Garden Harvest Day",
-      description: "Our community garden yielded a bountiful harvest, with fresh produce distributed to local families in need. Thank you to all the gardeners!",
+      keywords: "garden, community, harvest, food",
       slug: "community-garden-harvest-day",
       hint: "community garden"
     },
@@ -42,7 +43,7 @@ const allArticles = [
       image: "https://placehold.co/600x400.png",
       date: "June 1, 2024",
       title: "BPM Receives Grant for Tech Education",
-      description: "We are thrilled to receive a grant that will allow us to offer free coding workshops to underprivileged youth in our community.",
+      keywords: "grant, tech education, youth, coding",
       slug: "bpm-receives-grant-for-tech-education",
       hint: "computer workshop"
     },
@@ -80,7 +81,7 @@ export default function ArticlesPage() {
                                 <CardContent className="p-6">
                                 <p className="text-sm text-muted-foreground">{item.date}</p>
                                 <CardTitle className="mt-2 font-headline text-xl">{item.title}</CardTitle>
-                                <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
+                                <p className="mt-2 text-sm text-muted-foreground">{item.keywords}</p>
                                 </CardContent>
                                 <CardFooter>
                                 <Button variant="link" className="p-0 text-primary hover:text-accent">Read Article →</Button>

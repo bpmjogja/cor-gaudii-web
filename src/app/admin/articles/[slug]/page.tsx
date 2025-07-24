@@ -18,19 +18,19 @@ const allArticles = [
       image: "https://placehold.co/600x400.png",
       date: "2024-10-28",
       title: "Volunteer Drive Success",
-      description: "A huge thank you to everyone who signed up during our fall volunteer drive. Your support is invaluable. We welcomed over 50 new volunteers to our team.",
       slug: "volunteer-drive-success",
       status: "Published",
-      content: "Our recent volunteer drive was a massive success, and we couldn't be more grateful for the overwhelming support from our community. More than 50 new volunteers have joined our ranks, ready to contribute their time and skills to our various projects. This influx of new energy will allow us to expand our programs and reach even more people in need.\n\nWe have several orientation sessions scheduled for our new members to get them acquainted with our mission, values, and ongoing initiatives. We are excited to see the positive impact these new volunteers will bring."
+      content: "Our recent volunteer drive was a massive success, and we couldn't be more grateful for the overwhelming support from our community. More than 50 new volunteers have joined our ranks, ready to contribute their time and skills to our various projects. This influx of new energy will allow us to expand our programs and reach even more people in need.\n\nWe have several orientation sessions scheduled for our new members to get them acquainted with our mission, values, and ongoing initiatives. We are excited to see the positive impact these new volunteers will bring.",
+      keywords: "volunteers, community, support",
     },
     {
       image: "https://placehold.co/600x400.png",
       date: "2024-09-05",
       title: "New Partnership Announced",
-      description: "We're excited to partner with Local Corp to expand our reach and impact in the community. This partnership will help us launch three new initiatives in the coming year.",
       slug: "new-partnership-announced",
       status: "Published",
-      content: "We are thrilled to announce a new strategic partnership with Local Corp, a leading company in our city. This collaboration will enable us to launch three new community-focused initiatives over the next year, addressing critical areas such as education, health, and environmental sustainability. Local Corp's commitment to social responsibility makes them an ideal partner for our mission.\n\nTogether, we aim to create a lasting, positive impact on the lives of the people we serve. Stay tuned for more details about the upcoming projects and how you can get involved."
+      content: "We are thrilled to announce a new strategic partnership with Local Corp, a leading company in our city. This collaboration will enable us to launch three new community-focused initiatives over the next year, addressing critical areas such as education, health, and environmental sustainability. Local Corp's commitment to social responsibility makes them an ideal partner for our mission.\n\nTogether, we aim to create a lasting, positive impact on the lives of the people we serve. Stay tuned for more details about the upcoming projects and how you can get involved.",
+      keywords: "partnership, community, initiatives"
     },
 ];
 
@@ -40,7 +40,7 @@ function getArticleData(slug: string) {
             isNew: true,
             title: '',
             slug: '',
-            description: '',
+            keywords: '',
             content: '',
             status: 'Draft',
             image: ''
@@ -114,8 +114,8 @@ export default function EditArticlePage() {
                         </div>
                     </div>
                      <div className="space-y-2">
-                        <Label htmlFor="description">Excerpt / Description</Label>
-                        <Textarea id="description" defaultValue={article.description} placeholder="A short summary of the article." />
+                        <Label htmlFor="keywords">Keywords</Label>
+                        <Input id="keywords" defaultValue={article.keywords} placeholder="e.g. community, funding, event" />
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="content">Main Content (Markdown)</Label>

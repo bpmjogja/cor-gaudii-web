@@ -7,13 +7,14 @@ import Footer from "@/components/footer";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, Square } from "lucide-react";
+import { Play, Pause, Square, Tag } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type Article = {
     image: string;
     date: string;
     title: string;
-    description: string;
+    keywords: string;
     slug: string;
     hint: string;
     content: string;
@@ -142,6 +143,8 @@ export default function ArticleClient({ article }: { article: Article }) {
              }
         }
     };
+    
+    const keywords = article.keywords.split(',').map(k => k.trim());
 
     return (
         <div className="flex flex-col min-h-screen bg-background">
@@ -167,6 +170,13 @@ export default function ArticleClient({ article }: { article: Article }) {
                                     objectFit="cover"
                                     data-ai-hint={article.hint}
                                 />
+                            </div>
+
+                             <div className="my-6 flex flex-wrap items-center gap-2">
+                                <Tag className="h-5 w-5 text-muted-foreground" />
+                                {keywords.map(keyword => (
+                                    <Badge key={keyword} variant="secondary">{keyword}</Badge>
+                                ))}
                             </div>
 
                             <div className="p-4 rounded-lg bg-muted/50 my-6">
