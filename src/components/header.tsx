@@ -46,7 +46,13 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
+          <Button asChild variant="ghost">
+            <Link href="/auth/sign-in">Sign In</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/auth/sign-up">Sign Up</Link>
+          </Button>
         </div>
         <Sheet>
           <SheetTrigger asChild>
@@ -57,7 +63,7 @@ export default function Header() {
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <SheetTitle>Navigation Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-6 p-6">
               <Link href="/" className="flex items-center gap-2" prefetch={false}>
@@ -77,6 +83,18 @@ export default function Header() {
                   </SheetClose>
                 ))}
               </nav>
+              <div className="mt-auto flex flex-col gap-2 border-t pt-4">
+                <SheetClose asChild>
+                  <Button asChild variant="outline">
+                    <Link href="/auth/sign-in">Sign In</Link>
+                  </Button>
+                </SheetClose>
+                 <SheetClose asChild>
+                  <Button asChild>
+                    <Link href="/auth/sign-up">Sign Up</Link>
+                  </Button>
+                </SheetClose>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
