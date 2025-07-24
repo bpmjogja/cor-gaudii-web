@@ -7,8 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2, Upload, GripVertical } from "lucide-react";
 import Link from "next/link";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const allCoursesData = {
     "intro-to-community-building": {
@@ -71,16 +74,30 @@ type Course = {
     modules: Module[];
 }
 
-function getCourseData(courseId: string): Course | undefined {
+type CourseData = Course & {
+    isNew: boolean;
+}
+
+function getCourseData(courseId: string): CourseData | undefined {
+    if (courseId === 'new') {
+        return {
+            isNew: true,
+            title: '',
+            description: '',
+            modules: [],
+        };
+    }
     // @ts-ignore
-    return allCoursesData[courseId];
+    const course = allCoursesData[courseId];
+    return course ? { ...course, isNew: false } : undefined;
 }
 
 export default function EditCoursePage() {
     const params = useParams();
+    const router = useRouter();
     const courseId = Array.isArray(params.courseId) ? params.courseId[0] : params.courseId;
 
-    const [course, setCourse] = useState<Course | null>(null);
+    const [course, setCourse] = useState<CourseData | null>(null);
     const [draggedOverModule, setDraggedOverModule] = useState<number | null>(null);
     const [draggedItem, setDraggedItem] = useState<{ moduleIndex: number; materialIndex?: number } | null>(null);
 
@@ -88,21 +105,19 @@ export default function EditCoursePage() {
         const data = getCourseData(courseId);
         if (data) {
             setCourse(data);
+        } else {
+            notFound();
         }
     }, [courseId]);
 
 
     if (!course) {
-        // You can return a loading state or a not found component
-        const initialCourse = getCourseData(courseId);
-        if (!initialCourse) {
-             notFound();
-        }
-        // This is a temporary fix for the initial load, a better solution might be a loading state
-        setCourse(initialCourse);
         return <div>Loading...</div>;
     }
 
+    const { isNew } = course;
+    const pageTitle = isNew ? "Create New Course" : "Edit Course";
+    const pageDescription = isNew ? "Fill in the details to create a new course." : `Editing the course: ${course.title}`;
 
     const handleFileUploadDrop = (e: React.DragEvent<HTMLDivElement>, moduleIndex: number) => {
         e.preventDefault();
@@ -173,7 +188,6 @@ export default function EditCoursePage() {
             
             const effectiveTargetMaterialIndex = targetMaterialIndex ?? newCourse.modules[targetModuleIndex].materials.length;
             newCourse.modules[targetModuleIndex].materials.splice(effectiveTargetMaterialIndex, 0, movedMaterial);
-            
 
         } else { // Moving a module
             const sourceModuleIndex = draggedItem.moduleIndex;
@@ -201,19 +215,33 @@ export default function EditCoursePage() {
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <Button variant="outline" size="icon" asChild>
-                        <Link href="/admin/courses">
-                            <ArrowLeft className="h-4 w-4" />
-                            <span className="sr-only">Back to courses</span>
-                        </Link>
+                     <Button variant="outline" size="icon" onClick={() => router.push('/admin/courses')}>
+                        <ArrowLeft className="h-4 w-4" />
+                        <span className="sr-only">Back to courses</span>
                     </Button>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Edit Course</h1>
-                        <p className="text-muted-foreground">{course.title}</p>
+                        <h1 className="text-2xl font-bold tracking-tight">{pageTitle}</h1>
+                        <p className="text-muted-foreground">{pageDescription}</p>
                     </div>
                 </div>
-                 <Button>Save Changes</Button>
+                 <Button>{isNew ? "Create Course" : "Save Changes"}</Button>
             </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Course Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                     <div className="space-y-2">
+                        <Label htmlFor="title">Course Title</Label>
+                        <Input id="title" defaultValue={course.title} placeholder="e.g. Introduction to Community Building" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="description">Course Description</Label>
+                        <Textarea id="description" defaultValue={course.description} placeholder="A brief description of the course content." />
+                    </div>
+                </CardContent>
+            </Card>
 
             <Card>
                 <CardHeader>
@@ -232,7 +260,7 @@ export default function EditCoursePage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Accordion type="single" collapsible className="w-full space-y-4" defaultValue="item-0">
+                    <Accordion type="single" collapsible className="w-full space-y-4">
                         {course.modules.map((module: Module, index: number) => (
                             <AccordionItem 
                                 value={`item-${index}`} 

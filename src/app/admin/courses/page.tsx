@@ -25,9 +25,11 @@ export default function AdminCoursesPage() {
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Courses</h1>
-                <Button className="ml-auto" size="sm">
-                    <PlusCircle className="h-4 w-4 mr-2" />
-                    Add Course
+                <Button className="ml-auto" size="sm" asChild>
+                    <Link href="/admin/courses/new">
+                        <PlusCircle className="h-4 w-4 mr-2" />
+                        Add Course
+                    </Link>
                 </Button>
             </div>
             <Card>
