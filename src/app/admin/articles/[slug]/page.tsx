@@ -1,14 +1,16 @@
 
 'use client';
 
+import { useState } from 'react';
 import { useParams, notFound, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Newspaper } from 'lucide-react';
+import { ArrowLeft, Newspaper, UploadCloud } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Image from 'next/image';
 
 // In a real app, you'd fetch this from a CMS
 const allArticles = [
@@ -61,6 +63,18 @@ export default function EditArticlePage() {
     }
     
     const {isNew, ...article} = articleData;
+    const [imagePreview, setImagePreview] = useState<string | null>(article.image);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const pageTitle = isNew ? "Create New Article" : "Edit Article";
     const pageDescription = isNew ? "Fill in the details to publish a new article." : `Editing the article: ${article.title}`;
@@ -113,9 +127,27 @@ export default function EditArticlePage() {
                         />
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
-                        <div className="space-y-2">
-                            <Label htmlFor="image">Featured Image URL</Label>
-                            <Input id="image" defaultValue={article.image} placeholder="https://placehold.co/600x400.png" />
+                         <div className="space-y-2">
+                            <Label htmlFor="image-upload">Featured Image</Label>
+                             <div className="mt-1 flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-md space-y-4">
+                                {imagePreview ? (
+                                    <div className="relative w-full h-48">
+                                        <Image src={imagePreview} alt="Image preview" layout="fill" objectFit="contain" className="rounded-md" />
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center text-center text-muted-foreground">
+                                        <UploadCloud className="h-12 w-12" />
+                                        <p className="mt-2">No image uploaded</p>
+                                    </div>
+                                )}
+                                <div className="flex text-sm text-muted-foreground">
+                                    <label htmlFor="image-upload" className="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary/80 focus-within:outline-none">
+                                        <span>Upload a file</span>
+                                        <input id="image-upload" name="image-upload" type="file" className="sr-only" onChange={handleImageChange} accept="image/*" />
+                                    </label>
+                                </div>
+                                <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="status">Status</Label>
