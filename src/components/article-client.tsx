@@ -31,7 +31,7 @@ export default function ArticleClient({ article }: { article: Article }) {
     useEffect(() => {
         if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
             setSpeech(window.speechSynthesis);
-            articleTextRef.current = extractTextFromHtml(article.content);
+            articleTextRef.current = article.content;
         }
 
         // Cleanup speech synthesis on component unmount
@@ -41,12 +41,6 @@ export default function ArticleClient({ article }: { article: Article }) {
             }
         };
     }, [article.content]);
-
-    const extractTextFromHtml = (html: string) => {
-        if (typeof window === 'undefined') return '';
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        return doc.body.textContent || "";
-    };
 
     const handlePlay = () => {
         if (!speech || !articleTextRef.current) return;
@@ -210,7 +204,11 @@ export default function ArticleClient({ article }: { article: Article }) {
                                 </div>
                             </div>
 
-                            <div className="prose prose-lg max-w-none mx-auto text-foreground/80" dangerouslySetInnerHTML={{ __html: article.content }} />
+                            <div className="prose prose-lg max-w-none mx-auto text-foreground/80">
+                               <pre className="whitespace-pre-wrap font-body text-base">
+                                {article.content}
+                               </pre>
+                            </div>
                         </div>
                     </div>
                 </article>

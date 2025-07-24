@@ -19,7 +19,7 @@ const allArticles = [
       description: "A huge thank you to everyone who signed up during our fall volunteer drive. Your support is invaluable. We welcomed over 50 new volunteers to our team.",
       slug: "volunteer-drive-success",
       status: "Published",
-      content: "<p>Our recent volunteer drive was a massive success, and we couldn't be more grateful for the overwhelming support from our community. More than 50 new volunteers have joined our ranks, ready to contribute their time and skills to our various projects. This influx of new energy will allow us to expand our programs and reach even more people in need.</p><p>We have several orientation sessions scheduled for our new members to get them acquainted with our mission, values, and ongoing initiatives. We are excited to see the positive impact these new volunteers will bring.</p>"
+      content: "Our recent volunteer drive was a massive success, and we couldn't be more grateful for the overwhelming support from our community. More than 50 new volunteers have joined our ranks, ready to contribute their time and skills to our various projects. This influx of new energy will allow us to expand our programs and reach even more people in need.\n\nWe have several orientation sessions scheduled for our new members to get them acquainted with our mission, values, and ongoing initiatives. We are excited to see the positive impact these new volunteers will bring."
     },
     {
       image: "https://placehold.co/600x400.png",
@@ -28,7 +28,7 @@ const allArticles = [
       description: "We're excited to partner with Local Corp to expand our reach and impact in the community. This partnership will help us launch three new initiatives in the coming year.",
       slug: "new-partnership-announced",
       status: "Published",
-      content: "<p>We are thrilled to announce a new strategic partnership with Local Corp, a leading company in our city. This collaboration will enable us to launch three new community-focused initiatives over the next year, addressing critical areas such as education, health, and environmental sustainability. Local Corp's commitment to social responsibility makes them an ideal partner for our mission.</p><p>Together, we aim to create a lasting, positive impact on the lives of the people we serve. Stay tuned for more details about the upcoming projects and how you can get involved.</p>"
+      content: "We are thrilled to announce a new strategic partnership with Local Corp, a leading company in our city. This collaboration will enable us to launch three new community-focused initiatives over the next year, addressing critical areas such as education, health, and environmental sustainability. Local Corp's commitment to social responsibility makes them an ideal partner for our mission.\n\nTogether, we aim to create a lasting, positive impact on the lives of the people we serve. Stay tuned for more details about the upcoming projects and how you can get involved."
     },
 ];
 
@@ -102,8 +102,8 @@ export default function EditArticlePage() {
                         <Textarea id="description" defaultValue={article.description} placeholder="A short summary of the article." />
                     </div>
                      <div className="space-y-2">
-                        <Label htmlFor="content">Main Content (HTML)</Label>
-                        <Textarea id="content" defaultValue={article.content} className="min-h-[250px] font-mono" placeholder="<p>Start writing your article content here...</p>" />
+                        <Label htmlFor="content">Main Content (Markdown)</Label>
+                        <Textarea id="content" defaultValue={article.content} className="min-h-[250px] font-mono" placeholder="## Start writing your article content here using Markdown..." />
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
