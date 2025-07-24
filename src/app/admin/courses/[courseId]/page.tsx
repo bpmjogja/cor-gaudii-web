@@ -153,6 +153,7 @@ export default function EditCoursePage() {
 
     const handleDrop = (e: React.DragEvent, targetModuleIndex: number, targetMaterialIndex?: number) => {
         e.preventDefault();
+        e.stopPropagation();
         setDraggedOverModule(null);
         if (!draggedItem || !course) {
              if (!draggedItem && e.currentTarget.id.startsWith('dropzone-')) {
@@ -249,14 +250,16 @@ export default function EditCoursePage() {
                                 value={`item-${index}`} 
                                 className="border-b-0"
                             >
-                                <div className="flex items-center hover:bg-muted/50 rounded-t-md">
-                                     <div className="p-4 cursor-grab">
-                                        <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                <div className="flex items-center justify-between hover:bg-muted/50 rounded-t-md px-4">
+                                     <div className="flex items-center flex-1">
+                                        <div className="p-4 pl-0 cursor-grab">
+                                            <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                        </div>
+                                        <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left p-0">
+                                            {module.title}
+                                        </AccordionTrigger>
                                     </div>
-                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-0 py-4">
-                                        {module.title}
-                                    </AccordionTrigger>
-                                     <div className="flex items-center gap-2 mr-4">
+                                     <div className="flex items-center gap-2">
                                         <Button variant="ghost" size="icon" onClick={() => alert('Edit clicked')}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
