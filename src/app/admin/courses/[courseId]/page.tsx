@@ -172,8 +172,12 @@ export default function EditCoursePage() {
             
             const [movedMaterial] = newCourse.modules[sourceModuleIndex].materials.splice(sourceMaterialIndex, 1);
             
-            const dropIndex = targetMaterialIndex !== undefined ? targetMaterialIndex : newCourse.modules[targetModuleIndex].materials.length;
-            newCourse.modules[targetModuleIndex].materials.splice(dropIndex, 0, movedMaterial);
+            if (targetMaterialIndex !== undefined) {
+                newCourse.modules[targetModuleIndex].materials.splice(targetMaterialIndex, 0, movedMaterial);
+            } else {
+                 newCourse.modules[targetModuleIndex].materials.push(movedMaterial);
+            }
+            
 
         } else { // Moving a module
             const sourceModuleIndex = draggedItem.moduleIndex;
@@ -227,8 +231,7 @@ export default function EditCoursePage() {
                 <CardContent>
                     <Accordion type="single" collapsible className="w-full space-y-4" defaultValue="item-0">
                         {course.modules.map((module: Module, index: number) => (
-                            <AccordionItem 
-                                value={`item-${index}`} 
+                             <div
                                 key={module.id}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, index)}
@@ -237,22 +240,28 @@ export default function EditCoursePage() {
                                 onDragEnd={handleDragEnd}
                                 className="border rounded-lg bg-card"
                             >
-                                <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2 hover:bg-muted/50 rounded-t-md">
-                                    <div className="flex items-center flex-1">
-                                        <div className="p-2 cursor-grab">
-                                            <GripVertical className="h-5 w-5 text-muted-foreground" />
+                            <AccordionItem 
+                                value={`item-${index}`} 
+                                className="border-b-0"
+                            >
+                                <div className="flex items-center pr-4 hover:bg-muted/50 rounded-t-md">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left px-4 py-2 ">
+                                        <div className="flex items-center flex-1">
+                                            <div className="p-2 cursor-grab">
+                                                <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                            </div>
+                                            <span>{module.title}</span>
                                         </div>
-                                        <span>{module.title}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 ml-4 pr-4">
-                                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Edit clicked'); }}>
+                                    </AccordionTrigger>
+                                     <div className="flex items-center gap-2 ml-4">
+                                        <Button variant="ghost" size="icon" onClick={() => alert('Edit clicked')}>
                                             <Edit className="h-4 w-4" />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Trash clicked'); }}>
+                                        <Button variant="ghost" size="icon" onClick={() => alert('Trash clicked')}>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
-                                </AccordionTrigger>
+                                </div>
                                 <AccordionContent>
                                     <div
                                         onDragOver={(e) => { e.preventDefault(); setDraggedOverModule(index); }}
@@ -313,6 +322,7 @@ export default function EditCoursePage() {
                                     </div>
                                 </AccordionContent>
                             </AccordionItem>
+                            </div>
                         ))}
                     </Accordion>
                 </CardContent>
