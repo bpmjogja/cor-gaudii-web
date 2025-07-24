@@ -4,6 +4,8 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Image from "next/image";
 
 const supportOptions = [
   {
@@ -59,7 +61,31 @@ export default function SupportPage() {
                                             </CardDescription>
                                         </CardContent>
                                         <CardFooter className="justify-center py-6">
-                                            <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>{option.buttonText}</Button>
+                                            {option.value === 'one-time-donation' ? (
+                                                <Dialog>
+                                                    <DialogTrigger asChild>
+                                                        <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }}>{option.buttonText}</Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent className="sm:max-w-md">
+                                                        <DialogHeader>
+                                                            <DialogTitle>Thank You for Your Support</DialogTitle>
+                                                            <DialogDescription>
+                                                                Your generosity helps us continue our mission.
+                                                            </DialogDescription>
+                                                        </DialogHeader>
+                                                        <div className="flex items-center space-x-2">
+                                                            <div className="grid flex-1 gap-2">
+                                                                <Image src="https://placehold.co/400x300.png" alt="Thank you for your donation" width={400} height={300} className="rounded-md" data-ai-hint="donation gratitude" />
+                                                                <p className="text-sm text-muted-foreground pt-2">
+                                                                    To complete your donation, please follow the instructions on the payment processor's page. Every contribution, no matter the size, makes a significant impact.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            ) : (
+                                                <Button size="lg">{option.buttonText}</Button>
+                                            )}
                                         </CardFooter>
                                     </Card>
                                 </TabsContent>
