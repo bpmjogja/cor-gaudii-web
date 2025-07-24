@@ -101,19 +101,19 @@ export default function EditCoursePage({ params }: { params: { courseId: string 
                     <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
                         {course.modules.map((module: any, index: number) => (
                             <AccordionItem value={`item-${index}`} key={index}>
-                                <AccordionTrigger className="text-lg font-semibold hover:no-underline">
-                                    <div className="flex items-center justify-between w-full pr-4">
-                                       <span>{module.title}</span>
-                                       <div className="flex items-center gap-2">
-                                            <Button variant="ghost" size="icon">
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                             <Button variant="ghost" size="icon">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                       </div>
+                                <div className="flex items-center justify-between w-full py-4">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left">
+                                        <span>{module.title}</span>
+                                    </AccordionTrigger>
+                                    <div className="flex items-center gap-2 ml-4">
+                                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Edit clicked'); }}>
+                                            <Edit className="h-4 w-4" />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); alert('Trash clicked'); }}>
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
                                     </div>
-                                </AccordionTrigger>
+                                </div>
                                 <AccordionContent>
                                     <ul className="space-y-4 pt-4">
                                         {module.materials.map((material: Material, matIndex: number) => {
@@ -129,7 +129,7 @@ export default function EditCoursePage({ params }: { params: { courseId: string 
                                                             <Edit className="h-4 w-4 mr-2" />
                                                             Edit
                                                         </Button>
-                                                         <Button variant="outline" size="sm" variant="destructive">
+                                                         <Button variant="outline" size="sm" color="destructive">
                                                             <Trash2 className="h-4 w-4 mr-2" />
                                                             Delete
                                                         </Button>
