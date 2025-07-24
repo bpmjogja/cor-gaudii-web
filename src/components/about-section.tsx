@@ -1,5 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
 const ministries = [
   {
@@ -32,6 +34,11 @@ export default function AboutSection() {
             <p className="text-foreground/80">
               We work hand-in-hand with community leaders, volunteers, and donors to identify needs, develop strategies, and implement sustainable solutions that have a lasting impact.
             </p>
+            <div className="mt-6">
+                <Link href="/about">
+                    <Button>Learn More</Button>
+                </Link>
+            </div>
           </div>
           <div className="space-y-8">
             <h3 className="text-2xl font-bold tracking-tight text-primary font-headline sm:text-3xl text-center md:text-left">
