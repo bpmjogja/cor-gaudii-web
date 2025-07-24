@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import WhatsappFAB from '@/components/whatsapp-fab';
 
 export const metadata: Metadata = {
   title: 'BPM Landing',
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         {children}
         <Toaster />
+        <WhatsappFAB />
       </body>
     </html>
   );
