@@ -143,7 +143,10 @@ export default function EditCoursePage() {
                  e.dataTransfer.dropEffect = 'move';
             } else if (draggedItem.moduleIndex !== dropTargetModuleIndex && materialIndex === undefined) {
                  e.dataTransfer.dropEffect = 'move'; // Allow moving to another module
-            } else {
+            } else if (draggedItem.moduleIndex !== dropTargetModuleIndex && materialIndex !== undefined) {
+                e.dataTransfer.dropEffect = 'move'; // Allow moving to another material slot in another module
+            }
+             else {
                  e.dataTransfer.dropEffect = 'none';
             }
         } else { // Reordering modules
