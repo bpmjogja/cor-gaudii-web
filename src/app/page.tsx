@@ -6,6 +6,7 @@ import ArticlesSection from '@/components/articles-section';
 import EventsSection from '@/components/events-section';
 import ContactSection from '@/components/contact-section';
 import Footer from '@/components/footer';
+import QuickLinksSection from '@/components/quick-links-section';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <AboutSection />
+        <QuickLinksSection />
         <SupportSection />
         <ArticlesSection />
         <EventsSection />
