@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -21,6 +22,7 @@ export default function Header() {
     { href: "/about", label: "About" },
     { href: "/articles", label: "Articles" },
     { href: "/events", label: "Events" },
+    { href: "/admin", label: "Admin"},
   ];
 
   return (
