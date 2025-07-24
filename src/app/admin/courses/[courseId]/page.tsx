@@ -171,11 +171,8 @@ export default function EditCoursePage() {
             
             const [movedMaterial] = newCourse.modules[sourceModuleIndex].materials.splice(sourceMaterialIndex, 1);
             
-            if (targetMaterialIndex !== undefined) {
-                newCourse.modules[targetModuleIndex].materials.splice(targetMaterialIndex, 0, movedMaterial);
-            } else {
-                 newCourse.modules[targetModuleIndex].materials.push(movedMaterial);
-            }
+            const effectiveTargetMaterialIndex = targetMaterialIndex ?? newCourse.modules[targetModuleIndex].materials.length;
+            newCourse.modules[targetModuleIndex].materials.splice(effectiveTargetMaterialIndex, 0, movedMaterial);
             
 
         } else { // Moving a module
@@ -237,42 +234,41 @@ export default function EditCoursePage() {
                 <CardContent>
                     <Accordion type="single" collapsible className="w-full space-y-4" defaultValue="item-0">
                         {course.modules.map((module: Module, index: number) => (
-                             <div
-                                key={module.id}
-                                draggable
-                                onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e) => handleModuleDragOver(e, index)}
-                                onDrop={(e) => handleDrop(e, index)}
-                                onDragEnd={handleDragEnd}
-                                className="border rounded-lg bg-card"
-                            >
                             <AccordionItem 
                                 value={`item-${index}`} 
-                                className="border-b-0"
+                                key={module.id} 
+                                className="border rounded-lg bg-card"
+                                onDragOver={(e) => handleModuleDragOver(e, index)}
+                                onDrop={(e) => handleDrop(e, index)}
                             >
-                                <div className="flex items-center justify-between hover:bg-muted/50 rounded-t-md px-4">
-                                     <div className="flex items-center flex-1">
-                                        <div className="p-4 pl-0 cursor-grab">
-                                            <GripVertical className="h-5 w-5 text-muted-foreground" />
-                                        </div>
-                                        <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left p-0">
-                                            {module.title}
-                                        </AccordionTrigger>
+                             <div
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragEnd={handleDragEnd}
+                                className="flex items-center justify-between hover:bg-muted/50 rounded-t-md px-4"
+                            >
+                                <div className="flex items-center flex-1">
+                                    <div className="p-4 pl-0 cursor-grab">
+                                        <GripVertical className="h-5 w-5 text-muted-foreground" />
                                     </div>
-                                     <div className="flex items-center gap-2">
-                                        <Button variant="ghost" size="icon" onClick={() => alert('Edit clicked')}>
-                                            <Edit className="h-4 w-4" />
-                                        </Button>
-                                        <Button 
-                                            variant="outline"
-                                            size="icon" 
-                                            onClick={() => alert('Trash clicked')}
-                                            className="hover:bg-destructive hover:text-destructive-foreground"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline flex-1 text-left p-0">
+                                        {module.title}
+                                    </AccordionTrigger>
                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <Button variant="ghost" size="icon" onClick={() => alert('Edit clicked')}>
+                                        <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button 
+                                        variant="outline"
+                                        size="icon" 
+                                        onClick={() => alert('Trash clicked')}
+                                        className="hover:bg-destructive hover:text-destructive-foreground"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
                                 <AccordionContent>
                                     <div
                                         className="pt-0 p-4"
@@ -349,7 +345,6 @@ export default function EditCoursePage() {
                                     </div>
                                 </AccordionContent>
                             </AccordionItem>
-                            </div>
                         ))}
                     </Accordion>
                 </CardContent>
