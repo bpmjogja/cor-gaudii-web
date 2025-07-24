@@ -1,7 +1,17 @@
+
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Handshake, Calendar, FileText } from "lucide-react";
+import { ArrowRight, Heart, Handshake, Calendar, FileText, Copy } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+
+const bankAccountNumber = "123-456-7890";
 
 const quickLinks = [
   {
@@ -35,6 +45,16 @@ const quickLinks = [
 ];
 
 export default function QuickLinksSection() {
+    const { toast } = useToast();
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(bankAccountNumber);
+        setCopied(true);
+        toast({ title: "Copied!", description: "Bank account number copied to clipboard." });
+        setTimeout(() => setCopied(false), 2000);
+    };
+
   return (
     <section id="quick-links" className="bg-secondary">
       <div className="container mx-auto px-4 md:px-6">
@@ -59,11 +79,43 @@ export default function QuickLinksSection() {
                 <p className="text-muted-foreground">{link.description}</p>
               </CardContent>
               <div className="p-6 pt-0">
-                <Button asChild variant="link" className="p-0 text-primary hover:text-accent">
-                    <Link href={link.link}>
-                        Learn More <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                </Button>
+                {link.title === 'Donate' ? (
+                     <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant="link" className="p-0 text-primary hover:text-accent">
+                                Donate Now <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Thank You for Your Support</DialogTitle>
+                                <DialogDescription>
+                                    Your generosity helps us continue our mission.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <div className="rounded-md overflow-hidden">
+                                    <Image src="https://placehold.co/400x300.png" alt="Thank you for your donation" width={400} height={300} className="w-full" data-ai-hint="donation gratitude" />
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    To complete your donation, you can transfer to the bank account below. Every contribution, no matter the size, makes a significant impact.
+                                </p>
+                                <div className="flex items-center space-x-2">
+                                    <Input value={bankAccountNumber} readOnly className="flex-1" />
+                                    <Button variant="outline" size="icon" onClick={handleCopy}>
+                                        <Copy className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                ) : (
+                    <Button asChild variant="link" className="p-0 text-primary hover:text-accent">
+                        <Link href={link.link}>
+                            Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
+                )}
               </div>
             </Card>
           ))}
