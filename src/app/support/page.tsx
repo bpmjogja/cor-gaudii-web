@@ -1,11 +1,17 @@
+
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Handshake, Heart } from "lucide-react";
+import { Handshake, Heart, Copy } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 const supportOptions = [
   {
@@ -24,7 +30,19 @@ const supportOptions = [
   },
 ];
 
+const bankAccountNumber = "123-456-7890";
+
 export default function SupportPage() {
+    const { toast } = useToast();
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(bankAccountNumber);
+        setCopied(true);
+        toast({ title: "Copied!", description: "Bank account number copied to clipboard." });
+        setTimeout(() => setCopied(false), 2000);
+    };
+    
     return (
         <div className="flex flex-col min-h-screen bg-background">
             <Header />
@@ -73,12 +91,18 @@ export default function SupportPage() {
                                                                 Your generosity helps us continue our mission.
                                                             </DialogDescription>
                                                         </DialogHeader>
-                                                        <div className="flex items-center space-x-2">
-                                                            <div className="grid flex-1 gap-2">
-                                                                <Image src="https://placehold.co/400x300.png" alt="Thank you for your donation" width={400} height={300} className="rounded-md" data-ai-hint="donation gratitude" />
-                                                                <p className="text-sm text-muted-foreground pt-2">
-                                                                    To complete your donation, please follow the instructions on the payment processor's page. Every contribution, no matter the size, makes a significant impact.
-                                                                </p>
+                                                        <div className="space-y-4">
+                                                            <div className="rounded-md overflow-hidden">
+                                                                <Image src="https://placehold.co/400x300.png" alt="Thank you for your donation" width={400} height={300} className="w-full" data-ai-hint="donation gratitude" />
+                                                            </div>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                To complete your donation, you can transfer to the bank account below. Every contribution, no matter the size, makes a significant impact.
+                                                            </p>
+                                                            <div className="flex items-center space-x-2">
+                                                                <Input value={bankAccountNumber} readOnly className="flex-1" />
+                                                                <Button variant="outline" size="icon" onClick={handleCopy}>
+                                                                    <Copy className="h-4 w-4" />
+                                                                </Button>
                                                             </div>
                                                         </div>
                                                     </DialogContent>
