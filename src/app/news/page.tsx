@@ -11,7 +11,7 @@ const allArticles = [
       date: "October 28, 2024",
       title: "Volunteer Drive Success",
       description: "A huge thank you to everyone who signed up during our fall volunteer drive. Your support is invaluable. We welcomed over 50 new volunteers to our team.",
-      link: "#",
+      slug: "volunteer-drive-success",
       hint: "volunteers group"
     },
     {
@@ -19,7 +19,7 @@ const allArticles = [
       date: "September 5, 2024",
       title: "New Partnership Announced",
       description: "We're excited to partner with Local Corp to expand our reach and impact in the community. This partnership will help us launch three new initiatives in the coming year.",
-      link: "#",
+      slug: "new-partnership-announced",
       hint: "business handshake"
     },
     {
@@ -27,7 +27,7 @@ const allArticles = [
       date: "August 12, 2024",
       title: "Summer Youth Program Wraps Up",
       description: "Our summer youth program concluded with a showcase of the amazing projects created by the participants. It was a fantastic season of learning and growth.",
-      link: "#",
+      slug: "summer-youth-program-wraps-up",
       hint: "children learning"
     },
     {
@@ -35,7 +35,7 @@ const allArticles = [
       date: "July 20, 2024",
       title: "Community Garden Harvest Day",
       description: "Our community garden yielded a bountiful harvest, with fresh produce distributed to local families in need. Thank you to all the gardeners!",
-      link: "#",
+      slug: "community-garden-harvest-day",
       hint: "community garden"
     },
     {
@@ -43,7 +43,7 @@ const allArticles = [
       date: "June 1, 2024",
       title: "BPM Receives Grant for Tech Education",
       description: "We are thrilled to receive a grant that will allow us to offer free coding workshops to underprivileged youth in our community.",
-      link: "#",
+      slug: "bpm-receives-grant-for-tech-education",
       hint: "computer workshop"
     },
   ];
@@ -66,7 +66,7 @@ export default function ArticlesPage() {
                         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                         {allArticles.map((item) => (
                             <Card key={item.title} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <Link href={item.link} className="block">
+                            <Link href={`/articles/${item.slug}`} className="block">
                                 <CardHeader className="p-0">
                                 <Image
                                     src={item.image}
