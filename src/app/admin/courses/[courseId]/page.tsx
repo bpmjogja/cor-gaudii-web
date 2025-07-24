@@ -309,8 +309,8 @@ export default function EditCoursePage() {
                                                     </li>
                                                 )
                                             })}
-                                            <li className="flex justify-center mt-4">
-                                                <Button variant="outline" size="sm">
+                                            <li className="mt-4">
+                                                <Button variant="outline" size="sm" className="w-full">
                                                     <PlusCircle className="h-4 w-4 mr-2" />
                                                     Add Material
                                                 </Button>
