@@ -51,7 +51,7 @@ function getEventData(eventId: string) {
 export default function EditEventPage() {
     const params = useParams();
     const router = useRouter();
-    const eventId = Array.isArray(params.eventId) ? params.eventId[0] : params.eventId;
+    const eventId = Array.isArray(params.eventId) ? params.eventId[0] : params.eventId ?? '';
     
     const eventData = getEventData(eventId);
     
