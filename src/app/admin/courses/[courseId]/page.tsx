@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-const allCoursesData = {
+const allCoursesData: { [key: string]: Course } = {
     "intro-to-community-building": {
         title: "Introduction to Community Building",
         description: "Learn the fundamentals of building and nurturing a thriving community.",
@@ -86,7 +86,6 @@ function getCourseData(courseId: string): CourseData | undefined {
             modules: [],
         };
     }
-    // @ts-ignore
     const course = allCoursesData[courseId];
     return course ? { ...course, isNew: false } : undefined;
 }
