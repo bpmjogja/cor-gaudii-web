@@ -1,4 +1,4 @@
-# **App Name**: BPM Landing
+# **App Name**: Cor Gaudii Web
 
 ## Core Features:
 
