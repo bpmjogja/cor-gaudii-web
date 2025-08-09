@@ -62,8 +62,8 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-    const article = getArticleData(params.slug);
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+    const article = getArticleData((await params).slug);
 
     if (!article) {
         notFound();
