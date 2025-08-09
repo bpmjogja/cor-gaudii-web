@@ -6,7 +6,16 @@ import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft } from "lucide-rea
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const courseData = {
+type Course = {
+    title: string;
+    description: string;
+    modules: {
+        title: string;
+        materials: Material[];
+    }[];
+};
+
+const courseData: { [key: string]: Course } = {
     "intro-to-community-building": {
         title: "Introduction to Community Building",
         description: "Learn the fundamentals of building and nurturing a thriving community.",
@@ -52,7 +61,6 @@ type Material = {
 }
 
 function getCourseData(courseId: string) {
-    // @ts-ignore
     return courseData[courseId];
 }
 

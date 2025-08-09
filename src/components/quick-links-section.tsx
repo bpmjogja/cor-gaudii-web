@@ -91,7 +91,7 @@ export default function QuickLinksSection() {
               Quick Links
             </h2>
             <p className="mt-4 text-lg text-foreground/80">
-                There are many ways to support our mission. Find the one that's right for you.
+                There are many ways to support our mission. Find the one that&apos;s right for you.
             </p>
         </div>
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">

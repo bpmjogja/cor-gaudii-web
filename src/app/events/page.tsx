@@ -57,7 +57,7 @@ export default function EventsPage() {
                                 Events Calendar
                             </h1>
                             <p className="mt-4 text-lg text-foreground/80">
-                                Explore our upcoming events. Select a date on the calendar to see what's happening.
+                                Explore our upcoming events. Select a date on the calendar to see what&apos;s happening.
                             </p>
                         </div>
                         <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-16">

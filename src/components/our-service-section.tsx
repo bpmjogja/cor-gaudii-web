@@ -33,7 +33,7 @@ export default function OurServiceSection() {
             name: "",
             address: "",
             whatsappNumber: "",
-            age: "" as any,
+            age: 0,
             problem: "",
         },
     });
