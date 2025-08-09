@@ -54,7 +54,7 @@ function getArticleData(slug: string) {
 export default function EditArticlePage() {
     const params = useParams();
     const router = useRouter();
-    const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+    const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug ?? '';
     
     const articleData = getArticleData(slug);
     
