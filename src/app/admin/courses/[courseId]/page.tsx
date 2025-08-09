@@ -6,7 +6,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, FileText, Megaphone, HelpCircle, ArrowLeft, PlusCircle, Edit, Trash2, Upload, GripVertical } from "lucide-react";
-import Link from "next/link";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -102,7 +101,7 @@ export default function EditCoursePage() {
     const [draggedItem, setDraggedItem] = useState<{ moduleIndex: number; materialIndex?: number } | null>(null);
 
      useEffect(() => {
-        const data = getCourseData(courseId);
+        const data = getCourseData(courseId ?? '');
         if (data) {
             setCourse(data);
         } else {
@@ -173,7 +172,7 @@ export default function EditCoursePage() {
         if (!draggedItem || !course) {
              if (!draggedItem && e.currentTarget.id.startsWith('dropzone-')) {
                 const moduleIndex = parseInt(e.currentTarget.id.split('-')[1]);
-                handleFileUploadDrop(e, moduleIndex);
+                handleFileUploadDrop(e as React.DragEvent<HTMLDivElement>, moduleIndex);
              }
              return;
         }
