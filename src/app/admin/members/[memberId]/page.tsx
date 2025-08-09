@@ -34,6 +34,7 @@ function getMemberData(memberId: string) {
             name: '',
             email: '',
             role: 'Member',
+            dateJoined: Date.now().toString()
         };
     }
     const member = allMembers.find(m => m.id === memberId);
@@ -44,7 +45,7 @@ function getMemberData(memberId: string) {
 export default function EditMemberPage() {
     const params = useParams();
     const router = useRouter();
-    const memberId = Array.isArray(params.memberId) ? params.memberId[0] : params.memberId;
+    const memberId = Array.isArray(params.memberId) ? params.memberId[0] : params.memberId ?? '';
     
     const memberData = getMemberData(memberId);
     
