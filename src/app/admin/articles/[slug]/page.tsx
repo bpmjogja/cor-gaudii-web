@@ -46,7 +46,7 @@ export async function generateStaticParams() {
 	}));
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-	const articleData = getArticleData(params.slug);
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+	const articleData = getArticleData((await params).slug);
 	return <EditArticlePage articleData={articleData} />;
 }
