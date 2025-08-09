@@ -56,8 +56,8 @@ function getCourseData(courseId: string) {
     return courseData[courseId];
 }
 
-export default function CourseDetailPage({ params }: { params: { courseId: string } }) {
-    const course = getCourseData(params.courseId);
+export default async function CourseDetailPage({ params }: { params: Promise<{ courseId: string }> }) {
+    const course = getCourseData((await params).courseId);
 
     if (!course) {
         notFound();
