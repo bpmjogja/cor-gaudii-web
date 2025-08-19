@@ -40,12 +40,6 @@ function getArticleData(slug: string) {
 	return article ? { ...article, isNew: false } : undefined;
 }
 
-export async function generateStaticParams() {
-	return allArticles.map((article) => ({
-		slug: article.slug,
-	}));
-}
-
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
 	const articleData = getArticleData((await params).slug);
 	return <EditArticlePage articleData={articleData} />;

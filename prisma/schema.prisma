@@ -1,0 +1,267 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  INTERNAL
+  GUEST
+}
+
+model User {
+  id         String    @id @default(cuid())
+  role       UserRole  @default(GUEST)
+  internalId String?   @unique
+  guestId    String?   @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  InternalUser   InternalUser?    @relation("InternalUserReference", fields: [internalId], references: [id])
+  GuestUser      GuestUser?       @relation("GuestUserReference", fields: [guestId], references: [id])
+  EventAttendees EventAttendees[] @relation("EventAttendance")
+  PrayerRequest  PrayerRequest[]  @relation("PrayerRequestRequester")
+}
+
+enum InternalUserRole {
+  MEMBER
+  ADMIN
+}
+
+model InternalUser {
+  id                      String           @id @default(cuid())
+  email                   String           @unique
+  phone                   String           @unique
+  password                String
+  name                    String
+  role                    InternalUserRole @default(MEMBER)
+  imageFileId             String?
+  bio                     String?
+  birthDate               DateTime?
+  lastSessionRevocationAt DateTime?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  deletedAt               DateTime?
+
+  ImageFile    File?          @relation("InternalUserImageFile", fields: [imageFileId], references: [id])
+  Article      Article[]      @relation("ArticleAuthor")
+  Consultation Consultation[] @relation("ConsultationRequester")
+  Notification Notification[] @relation("NotificationRecipient")
+  User         User[]         @relation("InternalUserReference")
+  Courses      Course[]       @relation("CourseParticipants")
+}
+
+model GuestUser {
+  id        String    @id @default(cuid())
+  phone     String
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  User User[] @relation("GuestUserReference")
+}
+
+model Article {
+  id          String            @id @default(cuid())
+  title       String
+  content     String
+  authorId    String
+  mainImageId String?
+  tags        String[]
+  categories  ArticleCategory[]
+  publishedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  deletedAt   DateTime?
+
+  Author    InternalUser @relation("ArticleAuthor", fields: [authorId], references: [id])
+  MainImage File?        @relation("ArticleMainImage", fields: [mainImageId], references: [id])
+}
+
+enum ArticleCategory {
+  NEWS
+  OPINION
+  CATECHETICAL
+  DEVOTIONAL
+  APOLOGETICS
+  CHURCH
+  COMMUNITY
+  LITURGICAL
+  SOCIAL
+  EDUCATIONAL
+  SPIRITUAL
+  HISTORICAL
+  CULTURAL
+  MISSIONARY
+  YOUTH
+  FAMILY
+  OTHER
+}
+
+model Event {
+  id                         String          @id @default(cuid())
+  title                      String
+  startDate                  DateTime
+  endDate                    DateTime
+  location                   String
+  description                String
+  imageId                    String
+  additionalRegistrationData Json?
+  categories                 EventCategory[]
+  publishedAt                DateTime?
+  createdAt                  DateTime        @default(now())
+  updatedAt                  DateTime        @updatedAt
+  deletedAt                  DateTime?
+
+  Attendees EventAttendees[] @relation("EventAttendance")
+  Image     File             @relation("EventImage", fields: [imageId], references: [id])
+}
+
+enum EventCategory {
+  WORSHIP
+  COMMUNITY
+  EDUCATIONAL
+  SOCIAL
+  SPIRITUAL
+  CULTURAL
+  MISSIONARY
+  YOUTH
+  FAMILY
+  OTHER
+}
+
+model EventAttendees {
+  eventId        String
+  event          Event     @relation("EventAttendance", fields: [eventId], references: [id])
+  userId         String
+  user           User      @relation("EventAttendance", fields: [userId], references: [id])
+  additionalData String[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  @@id([eventId, userId])
+}
+
+model PrayerRequest {
+  id        String    @id @default(cuid())
+  userId    String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  Requester User @relation("PrayerRequestRequester", fields: [userId], references: [id])
+}
+
+enum ConsultationStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model Consultation {
+  id          String             @id @default(cuid())
+  userId      String?
+  date        DateTime?
+  place       String?
+  description String?
+  status      ConsultationStatus @default(PENDING)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  deletedAt   DateTime?
+
+  Requester InternalUser? @relation("ConsultationRequester", fields: [userId], references: [id])
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  content   String
+  type      NotificationType @default(INFO)
+  clickUrl  String?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  deletedAt DateTime?
+
+  Recipient InternalUser @relation("NotificationRecipient", fields: [userId], references: [id])
+}
+
+model Certificate {
+  id         String    @id @default(cuid())
+  holderName String
+  title      String
+  issueDate  DateTime
+  fileId     String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  File File @relation("CertificateFile", fields: [fileId], references: [id])
+}
+
+model LearningResource {
+  id          String    @id @default(cuid())
+  courseId    String
+  title       String
+  description String
+  fileId      String
+  type        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  Course Course @relation("CourseResource", fields: [courseId], references: [id])
+  File   File   @relation("ResourceFile", fields: [fileId], references: [id])
+}
+
+model File {
+  id        String    @id @default(cuid())
+  byteArray Bytes
+  mimeType  String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  LearningResource LearningResource[] @relation("ResourceFile")
+  Certificate      Certificate[]      @relation("CertificateFile")
+  InternalUser     InternalUser[]     @relation("InternalUserImageFile")
+  Course           Course[]           @relation("CourseImage")
+  Event            Event[]            @relation("EventImage")
+  Article          Article[]          @relation("ArticleMainImage")
+}
+
+model Course {
+  id          String          @id @default(cuid())
+  title       String
+  description String
+  imageId     String
+  categories  EventCategory[]
+  publishedAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+
+  Participants     InternalUser[]     @relation("CourseParticipants")
+  Image            File               @relation("CourseImage", fields: [imageId], references: [id])
+  LearningResource LearningResource[] @relation("CourseResource")
+}

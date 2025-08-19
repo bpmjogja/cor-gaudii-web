@@ -55,13 +55,6 @@ function getArticleData(slug: string) {
     return allArticles.find(article => article.slug === slug);
 }
 
-// This function runs on the server during build time
-export async function generateStaticParams() {
-    return allArticles.map(article => ({
-        slug: article.slug,
-    }));
-}
-
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const article = getArticleData((await params).slug);
 
