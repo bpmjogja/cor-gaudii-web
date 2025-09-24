@@ -1,4 +1,4 @@
-# **App Name**: Cor Gaudii Web
+# **App Name**: BPM Web
 
 ## Core Features:
 

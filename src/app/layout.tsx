@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import WhatsappFAB from '@/components/whatsapp-fab';
 
 export const metadata: Metadata = {
-  title: 'Cor Gaudii Web',
+  title: 'BPM Web',
   description: 'Landing page for the BPM non-profit organization.',
 };
 
